@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>2048</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="2048.js"></script>
+    <style>
+    	body {background-color: #e6e6e6;}
+    	td
+    	{
+    		text-align: center;
+    		border: 1px solid black;
+    		height: 6rem;
+    		width: 6rem;
+    		border-radius: 30px;
+    		background-color: #a0a0a0;
+    		font-size: 300%;
+    		font-family: times new roman;
+    	}
+    	table
+    	{
+    		margin: auto;
+    		border: 1px solid black;
+    		border-collapse: separate;
+    		background-color: #000000;
+    	}
+    	.empty
+    	{
+    		background-color: white;
+    		color: white;
+    	}
+    	.notEmpty
+    	{
+    		color: black;
+    	}
+    	h1, h2
+    	{
+    		text-align: center;
+    	}
+    	.sPlus
+    	{
+    		background-color: red;
+    	}
+    	.score
+    	{
+			background-color: #333333;
+			color: white;
+	   		text-align: center;
+			height: 1em;
+			width: 2em;
+			font-weight: bold;
+			border-radius: 0px;
+			padding: 0;
+    	}
+    	#SB
+    	{
+    		width: 25%;
+    		margin: auto;
+    		margin-bottom: 1em;
+    		text-align: center;
+    	}
+    	button
+    	{
+    		margin: auto;
+    		display: flex;
+    		margin-bottom: 1rem;
+    	}
+    	#gameOver
+    	{
+    		text-align: center;
+    		background-color: yellow;
+    		width: 24rem;
+    		margin: auto;
+    		height: 24rem;
+    		position: static;
+    	}
+
+    </style>
+  </head>
+  <body>
+    <h1>js2048</h1>
+    <h2>Created by Sam Murray </h2>
+    <div id="app">
+    	<table id="SB">
+    		<tr>
+    			<th id="current" class="score">Current Score:</th>
+    			<th id="best" class="score">Best Score:</th>
+    		</tr>
+    		<tr>
+    			<td class="score">{{ current }}</td>
+    			<td class="score">{{ Math.max(best, current)}}</td>
+    		</tr>
+    	</table>
+    	<button id="newGame">New Game</button>
+		<table id="board">
+			<tr>
+				<td v-bind:class="{empty: vals[0] == 0, notEmpty: vals[0] > 0 && vals[0]< 4, sPlus: vals[0] >=4}">{{ Math.pow(2, vals[0]) }}</td>
+				<td v-bind:class="{empty: vals[1] == 0, notEmpty: vals[1] > 0 && vals[1]< 4, sPlus: vals[1] >=4}">{{ Math.pow(2, vals[1]) }}</td>
+				<td v-bind:class="{empty: vals[2] == 0, notEmpty: vals[2] > 0 && vals[2]< 4, sPlus: vals[2] >=4}">{{ Math.pow(2, vals[2]) }}</td>
+				<td v-bind:class="{empty: vals[3] == 0, notEmpty: vals[3] > 0 && vals[3]< 4, sPlus: vals[3] >=4}">{{ Math.pow(2, vals[3]) }}</td>
+			</tr>
+			<tr>
+				<td v-bind:class="{empty: vals[4] == 0, notEmpty: vals[4] > 0 && vals[4]< 4, sPlus: vals[4] >=4}">{{ Math.pow(2, vals[4]) }}</td>
+				<td v-bind:class="{empty: vals[5] == 0, notEmpty: vals[5] > 0 && vals[5]< 4, sPlus: vals[5] >=4}">{{ Math.pow(2, vals[5]) }}</td>
+				<td v-bind:class="{empty: vals[6] == 0, notEmpty: vals[6] > 0 && vals[6]< 4, sPlus: vals[6] >=4}">{{ Math.pow(2, vals[6]) }}</td>
+				<td v-bind:class="{empty: vals[7] == 0, notEmpty: vals[7] > 0 && vals[7]< 4, sPlus: vals[7] >=4}">{{ Math.pow(2, vals[7]) }}</td>
+			</tr>
+			<tr>
+				<td v-bind:class="{empty: vals[8] == 0, notEmpty: vals[8] > 0 && vals[8]< 4, sPlus: vals[8] >=4}">{{ Math.pow(2, vals[8]) }}</td>
+				<td v-bind:class="{empty: vals[9] == 0, notEmpty: vals[9] > 0 && vals[9]< 4, sPlus: vals[9] >=4}">{{ Math.pow(2, vals[9]) }}</td>
+				<td v-bind:class="{empty: vals[10] == 0, notEmpty: vals[10] > 0 && vals[10]< 4, sPlus: vals[10] >=4}">{{ Math.pow(2, vals[10]) }}</td>
+				<td v-bind:class="{empty: vals[11] == 0, notEmpty: vals[11] > 0 && vals[11]< 4, sPlus: vals[11] >=4}">{{ Math.pow(2, vals[11]) }}</td>
+			</tr>
+			<tr>
+				<td v-bind:class="{empty: vals[12] == 0, notEmpty: vals[12] > 0 && vals[12]< 4, sPlus: vals[12] >=4}">{{ Math.pow(2, vals[12]) }}</td>
+				<td v-bind:class="{empty: vals[13] == 0, notEmpty: vals[13] > 0 && vals[13]< 4, sPlus: vals[13] >=4}">{{ Math.pow(2, vals[13]) }}</td>
+				<td v-bind:class="{empty: vals[14] == 0, notEmpty: vals[14] > 0 && vals[14]< 4, sPlus: vals[14] >=4}">{{ Math.pow(2, vals[14]) }}</td>
+				<td v-bind:class="{empty: vals[15] == 0, notEmpty: vals[15] > 0 && vals[15]< 4, sPlus: vals[15] >=4}">{{ Math.pow(2, vals[15]) }}</td>
+			</tr>
+		</table>
+		<div id="gameOver">Good Game</div>
+	</div>
+	</body>
+</html>
