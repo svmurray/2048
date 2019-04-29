@@ -181,9 +181,9 @@ window.onload = function() {
 		if (!(app.possible.left || app.possible.right || app.possible.up || app.possible.down ))
 		{
 			app.best = Math.max(app.best, app.current);
-			window.alert(app.possible.up + " " + app.possible.down + " " + app.possible.left + " " + app.possible.right);
+			console.log(app.possible.up + " " + app.possible.down + " " + app.possible.left + " " + app.possible.right);
+    		document.getElementById("gameOver").style.visibility = "visible";
 		}
-		document.getElementById("gameOver").style.visibility = "visible";
 	}
 
 	document.onkeydown = function(event)
@@ -214,6 +214,7 @@ window.onload = function() {
 		else	{console.log(event.keyCode + event.key);}
 		if (arrow)
 		{
+		    event.preventDefault();
 			app.possible.down = moveDown(false);
 			app.possible.up = moveUp(false);
 			app.possible.right = moveRight(false);
