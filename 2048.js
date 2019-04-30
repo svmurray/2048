@@ -10,7 +10,8 @@ window.onload = function() {
 			best: 0,
 			current: 0,
 			possible: {left: true, right: true, up: true, down: true},
-			gamesPlayed: 0
+			gamesPlayed: 0,
+			highest: 0
 		}
 	});
 
@@ -55,6 +56,7 @@ window.onload = function() {
 							app.current += Math.pow(2, app.vals[(idx1+4*(j-k))-4]);
 							app.vals[(idx1+4*(j-k))] = 0;
 							app.dirty[(idx1+4*(j-k))-4] = true;
+							app.highest = Math.max(app.highest, app.vals[(idx1+4*(j-k))-4]);
 						}
 					}
 				}
@@ -86,6 +88,7 @@ window.onload = function() {
 							app.current += Math.pow(2, app.vals[(idx1-4*(j-k))+4]);
 							app.vals[(idx1-4*(j-k))] = 0;
 							app.dirty[(idx1-4*(j-k))+4] = true;
+							app.highest = Math.max(app.highest, app.vals[(idx1-4*(j-k))+4]);
 						}
 					}
 				}
@@ -117,6 +120,7 @@ window.onload = function() {
 							app.current += Math.pow(2, app.vals[(idx1-(j-k))+1]);
 							app.vals[(idx1-(j-k))] = 0;
 							app.dirty[(idx1-(j-k))+1] = true;
+							app.highest = Math.max(app.highest, app.vals[(idx1-(j-k))+1]);
 						}
 					}
 				}
@@ -148,6 +152,7 @@ window.onload = function() {
 							app.current += Math.pow(2, app.vals[(idx1+(j-k))-1]);
 							app.vals[(idx1+(j-k))] = 0;
 							app.dirty[(idx1+(j-k))-1] = true;
+							app.highest = Math.max(app.highest, app.vals[(idx1+(j-k))-1]);
 						}
 					}
 				}
