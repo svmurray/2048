@@ -16,6 +16,7 @@ window.onload = function() {
 
 	document.getElementById("newGame").onclick = startGame;
     startGame();
+    console.log(app.vals);
 
 	function addVal()
 	{
@@ -159,7 +160,7 @@ window.onload = function() {
 
 	function startGame()
 	{
-		document.getElementById("gameOver").style.visibility = "hidden";
+		//document.getElementById("gameOver").style.visibility = "hidden";
 		app.best = Math.max(app.best, app.current);
 		app.current = 0;
 		for (var j=0; j<app.vals.length; j++) {app.vals[j] = 0;}
@@ -181,7 +182,7 @@ window.onload = function() {
 			app.best = Math.max(app.best, app.current);
 			console.log(app.possible.up + " " + app.possible.down + " " + app.possible.left + " " + app.possible.right);
 			console.log(app.vals);
-    		document.getElementById("gameOver").style.visibility = "visible";
+    		document.getElementById("gameOver").requestFullscreen();//style.visibility = "visible";
 			over = true;
 		}
 		return over;

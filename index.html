@@ -1,229 +1,127 @@
-"use strict";
-window.onload = function() {
-	console.log("js working");
-	var app = new Vue(
-    {
-		el: "#app",
-		data: {
-			vals: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-			dirty: [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-			best: 0,
-			current: 0,
-			possible: {left: true, right: true, up: true, down: true},
-			gamesPlayed: 0
-		}
-	});
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>2048</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="2048.js"></script>
+    <style>
+    	body {background-color: #e6e6e6;}
+    	td
+    	{
+    		text-align: center;
+    		border: 1px solid black;
+    		height: 6rem;
+    		width: 6rem;
+    		border-radius: 30px;
+    		background-color: #a0a0a0;
+    		font-size: 300%;
+    		font-family: times new roman;
+    	}
+    	table
+    	{
+    		margin: auto;
+    		border: 1px solid black;
+    		border-collapse: separate;
+    		background-color: #000000;
+    	}
+    	.empty
+    	{
+    		background-color: white;
+    		color: white;
+    	}
+    	.notEmpty
+    	{
+    		color: black;
+    	}
+    	h1, h2
+    	{
+    		text-align: center;
+    	}
+    	.sPlus
+    	{
+    		background-color: red;
+    	}
+    	.score
+    	{
+			background-color: #333333;
+			color: white;
+	   		text-align: center;
+			height: 1em;
+			width: 2em;
+			font-weight: bold;
+			border-radius: 0px;
+			padding: 0;
+    	}
+    	#SB
+    	{
+    		width: 25%;
+    		margin: auto;
+    		margin-bottom: 1em;
+    		text-align: center;
+    	}
+    	button
+    	{
+    		margin: auto;
+    		display: flex;
+    		margin-bottom: 1rem;
+    	}
+    	#gameOver
+    	{
+    		text-align: center;
+    		background-color: yellow;
+    		width: 24rem;
+    		margin: auto;
+    		height: 24rem;
+    		position: static;
+    	}
 
-	document.getElementById("newGame").onclick = startGame;
-    startGame();
-
-	function addVal()
-	{
-		var idx = Math.floor(Math.random() * 16);
-		var oneEmpty = false;
-		var i =0;
-		while(app.vals[idx] != 0 && (i<16 || oneEmpty))
-		{
-			if(!oneEmpty) {oneEmpty = oneEmpty || app.vals[i] == 0;}
-			idx = Math.floor(Math.random() * 16);
-			i++;
-			if (i>16){console.log("weird case");}
-		}
-		var val = Math.ceil(Math.random() * 2);
-		Vue.set(app.vals, idx, val);
-	}
-
-	function moveUp(update){
-		var idx1;
-		var moved = false;
-		for (var i = 0; i < 4; i++) {//cols Left to Right
-			idx1 = i+4; //get proper (last) index for row
-			for (var j = 0; j < 3; j++) {//iterate borrom to top
-				for (var k=0; k<=j; k++){
-					if (app.vals[idx1+4*(j-k)] > 0 && app.vals[idx1-4+4*(j-k)] == 0){//if there is a value and there isn't a value next to it
-						moved = true;
-						if (update){
-							app.vals[idx1-4+4*(j-k)] = app.vals[idx1+4*(j-k)];
-							app.vals[idx1+4*(j-k)] = 0;
-						}
-					}
-					if (app.vals[idx1+4*(j-k)] == app.vals[(idx1+4*(j-k))-4] && app.vals[(idx1+4*(j-k))-4] > 0 && !app.dirty[(idx1+4*(j-k))-4] && !app.dirty[(idx1+4*(j-k))]) {
-						moved = true;
-						if (update){
-							app.vals[(idx1+4*(j-k))-4]++;
-							app.current += Math.pow(2, app.vals[(idx1+4*(j-k))-4]);
-							app.vals[(idx1+4*(j-k))] = 0;
-							app.dirty[(idx1+4*(j-k))-4] = true;
-						}
-					}
-				}
-			}
-		}
-		if(moved && update){addVal();}
-		Vue.set(app.vals, 0, app.vals[0]);
-		return moved;
-	}
-
-	function moveDown(update) {
-		var idx1;
-		var moved = false;
-		for (var i = 0; i < 4; i++) {//cols Left to Right
-			idx1 = i+8; //get proper (last) index for row
-			for (var j = 0; j < 3; j++) {//iterate bottom to top
-				for (var k=0; k<=j; k++){
-					if(app.vals[idx1-4*(j-k)] > 0 && app.vals[idx1-4*(j-k)+4] == 0){//if there is a value and there isn't a value next to it
-						moved = true;
-						if (update){
-							app.vals[idx1+4-4*(j-k)] = app.vals[idx1-4*(j-k)];
-							app.vals[idx1-4*(j-k)] = 0;
-						}
-					}
-					if (app.vals[idx1-4*(j-k)] == app.vals[(idx1-4*(j-k))+4] && app.vals[(idx1-4*(j-k))+4] > 0 && !app.dirty[(idx1-4*(j-k))+4] && !app.dirty[(idx1-4*(j-k))]){
-						moved = true;
-						if (update){
-							app.vals[(idx1-4*(j-k))+4]++;
-							app.current += Math.pow(2, app.vals[(idx1-4*(j-k))+4]);
-							app.vals[(idx1-4*(j-k))] = 0;
-							app.dirty[(idx1-4*(j-k))+4] = true;
-						}
-					}
-				}
-			}
-		}
-		if(moved && update){addVal();}
-		Vue.set(app.vals, 0, app.vals[0]);
-		return moved;
-	}
-
-	function moveRight(update) {
-		var idx1;
-		var moved = false;
-		for (var i = 0; i < 4; i++){//rows top to bottom
-			idx1 = (4*i)+2; //get proper (last) index for row
-			for (var j = 0; j < 3; j++) {//iterate left to right
-				for (var k=0; k<=j; k++) {//move spot by spot
-					if (app.vals[idx1-(j-k)] > 0 && app.vals[(idx1-(j-k))+1] == 0) {//if there is a value and there isn't a value next to it
-						moved = true;
-						if (update){
-							app.vals[(idx1-(j-k))+1] = app.vals[idx1-(j-k)];
-							app.vals[idx1-(j-k)] = 0;
-						}
-					}
-					if (app.vals[idx1-(j-k)] == app.vals[(idx1-(j-k))+1] && app.vals[(idx1-(j-k))+1] > 0 && !app.dirty[(idx1-(j-k))+1] && !app.dirty[(idx1-(j-k))]) {
-						moved = true;
-						if (update){
-							app.vals[(idx1-(j-k))+1]++;
-							app.current += Math.pow(2, app.vals[(idx1-(j-k))+1]);
-							app.vals[(idx1-(j-k))] = 0;
-							app.dirty[(idx1-(j-k))+1] = true;
-						}
-					}
-				}
-			}
-		}
-		if(moved && update){addVal();}
-		Vue.set(app.vals, 0, app.vals[0]);
-		return moved;
-	}
-
-	function moveLeft(update){
-		var idx1;
-		var moved = false;
-		for (var i=0; i<4;i++) {//traverse rows
-			idx1 = (4*i) + 1; // o x o o
-			for(var j=0; j<3; j++) {//traverse 3 eligbile for movement spots
-				for(var k=0; k <= j; k++) {//search the whole way
-					if(app.vals[idx1-1+(j-k)] == 0 && app.vals[idx1+(j-k)] > 0) {//Spot to left is empty && this one has a value
-						moved = true;
-						if (update){
-							app.vals[idx1-1+(j-k)] = app.vals[idx1+(j-k)];
-							app.vals[idx1+(j-k)] = 0;
-						}
-					}
-					if (app.vals[idx1+(j-k)] == app.vals[(idx1+(j-k))-1] && app.vals[(idx1+(j-k))-1] > 0 && !app.dirty[(idx1+(j-k))-1] && !app.dirty[(idx1+(j-k))]){
-						moved = true;
-						if (update){
-							app.vals[(idx1+(j-k))-1]++;
-							app.current += Math.pow(2, app.vals[(idx1+(j-k))-1]);
-							app.vals[(idx1+(j-k))] = 0;
-							app.dirty[(idx1+(j-k))-1] = true;
-						}
-					}
-				}
-			}
-		}
-		if(moved && update){addVal();}
-		Vue.set(app.vals, 0, app.vals[0]);
-		return moved;
-	}
-
-	function startGame()
-	{
-		document.getElementById("gameOver").style.visibility = "hidden";
-		app.best = Math.max(app.best, app.current);
-		app.current = 0;
-		for (var j=0; j<app.vals.length; j++) {app.vals[j] = 0;}
-		for(var i = 0; i<2; i++)
-		{
-			var val = Math.ceil(Math.random() * 2);
-			var idx = Math.floor(Math.random() * 16);
-			Vue.set(app.vals, idx, val);
-		}
-		app.gamesPlayed++;
-
-	}
-
-	function gameOver()
-	{
-	    var over = false;
-		if (!(app.possible.left || app.possible.right || app.possible.up || app.possible.down ))
-		{
-			app.best = Math.max(app.best, app.current);
-			console.log(app.possible.up + " " + app.possible.down + " " + app.possible.left + " " + app.possible.right);
-			console.log(app.vals);
-    		document.getElementById("gameOver").style.visibility = "visible";
-			over = true;
-		}
-		return over;
-	}
-
-	document.onkeydown = function(event)
-	{
-		app.dirty = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
-		var kc = event.keyCode;
-		var arrow = false;
-		if (kc == 87 || kc == 38)
-		{
-			moveUp(true);
-			arrow = true;
-		}
-		else if (kc == 40 || kc == 83)
-		{
-			moveDown(true);
-			arrow = true;
-		}
-		else if (kc == 65 || kc == 37)
-		{
-			moveLeft(true);
-			arrow = true;
-		}
-		else if (kc == 68 || kc == 39)
-		{
-			moveRight(true);
-			arrow = true;
-		}
-		else	{console.log(event.keyCode + event.key);}
-		if (arrow)
-		{
-    		app.dirty = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
-		    //app.possible
-		    //console.log(app.possible.up + " " + app.possible.down + " " + app.possible.left + " " + app.possible.right);
-		    event.preventDefault();
-			app.possible.down = moveDown(false);
-			app.possible.up = moveUp(false);
-			app.possible.right = moveRight(false);
-			app.possible.left = moveLeft(false);
-			if (gameOver()){console.log("!!!!!!!!!!");}
-		}
-	}
-}
+    </style>
+  </head>
+  <body>
+    <h1>js2048</h1>
+    <h2>Created by Sam Murray </h2>
+    <div id="app">
+        <table id="SB">
+            <tr>
+            <th id="current" class="score">Current Score:</th> 
+            <th id="best" class="score">Best Score:</th> 
+            <th id="gp" class="score"> Games Played:</th>
+        </tr> 
+        <tr>
+            <td class="score">{{ current }}</td> 
+            <td class="score">{{ Math.max( current, best) }}</td> 
+            <td class="score">{{ gamesPlayed }}</td>
+        </tr>
+        </table> 
+        <button id="newGame" >New Game</button> 
+        <table id="board">
+        <tr>
+            <td v-bind:class="{ empty: vals[0] == 0, notEmpty: vals[0] > 0, sPlus: vals[0] >= 5}">{{ Math.pow(2, vals[0]) }}</td> 
+            <td v-bind:class="{ empty: vals[1] == 0, notEmpty: vals[1] > 0, sPlus: vals[1] >= 5}">{{ Math.pow(2, vals[1]) }}</td> 
+            <td v-bind:class="{ empty: vals[2] == 0, notEmpty: vals[2] > 0, sPlus: vals[2] >= 5}">{{ Math.pow(2, vals[2]) }}</td> 
+            <td v-bind:class="{ empty: vals[3] == 0, notEmpty: vals[3] > 0, sPlus: vals[3] >= 5}">{{ Math.pow(2, vals[3]) }}</td>
+        </tr>
+        <tr>
+            <td v-bind:class="{ empty: vals[4] == 0, notEmpty: vals[4] > 0, sPlus: vals[4] >= 5}">{{ Math.pow(2, vals[4]) }}</td> 
+            <td v-bind:class="{ empty: vals[5] == 0, notEmpty: vals[5] > 0, sPlus: vals[5] >= 5}">{{ Math.pow(2, vals[5]) }}</td> 
+            <td v-bind:class="{ empty: vals[6] == 0, notEmpty: vals[6] > 0, sPlus: vals[6] >= 5}">{{ Math.pow(2, vals[6]) }}</td> 
+            <td v-bind:class="{ empty: vals[7] == 0, notEmpty: vals[7] > 0, sPlus: vals[7] >= 5}">{{ Math.pow(2, vals[7]) }}</td>
+        </tr> 
+        <tr>
+            <td v-bind:class="{ empty: vals[8] == 0, notEmpty: vals[8] > 0, sPlus: vals[8] >= 5}">{{ Math.pow(2, vals[8]) }}</td> 
+            <td v-bind:class="{ empty: vals[9] == 0, notEmpty: vals[9] > 0, sPlus: vals[9] >= 5}">{{ Math.pow(2, vals[9]) }}</td> 
+            <td v-bind:class="{ empty: vals[10] == 0, notEmpty: vals[10] > 0, sPlus: vals[10] >= 5}">{{ Math.pow(2, vals[10]) }}</td> 
+            <td v-bind:class="{ empty: vals[11] == 0, notEmpty: vals[11] > 0, sPlus: vals[11] >= 5}">{{ Math.pow(2, vals[11]) }}</td>
+        </tr> 
+        <tr>
+            <td v-bind:class="{ empty: vals[12] == 0, notEmpty: vals[12] > 0, sPlus: vals[12] >= 5}">{{ Math.pow(2, vals[12]) }}</td> 
+            <td v-bind:class="{ empty: vals[13] == 0, notEmpty: vals[13] > 0, sPlus: vals[13] >= 5}">{{ Math.pow(2, vals[13]) }}</td> 
+            <td v-bind:class="{ empty: vals[14] == 0, notEmpty: vals[14] > 0, sPlus: vals[14] >= 5}">{{ Math.pow(2, vals[14]) }}</td> 
+            <td v-bind:class="{ empty: vals[15] == 0, notEmpty: vals[15] > 0, sPlus: vals[15] >= 5}">{{ Math.pow(2, vals[15]) }}</td>
+        </tr>
+        </table> 
+            <div id="gameOver" >Good Game</div>
+        </div>
+    </body>
+</html>
