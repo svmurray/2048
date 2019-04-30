@@ -9,18 +9,13 @@ window.onload = function() {
 			dirty: [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
 			best: 0,
 			current: 0,
-			possible: {left: true, right: true, up: true, down: true}
+			possible: {left: true, right: true, up: true, down: true},
+			gamesPlayed: 0
 		}
 	});
 
 	document.getElementById("newGame").onclick = startGame;
-
-	for(var i = 0; i<2; i++)
-	{
-		var val = Math.ceil(Math.random() * 2);
-		var idx = Math.floor(Math.random() * 16);
-		Vue.set(app.vals, idx, val);
-	}
+    startGame();
 
 	function addVal()
 	{
@@ -164,6 +159,7 @@ window.onload = function() {
 
 	function startGame()
 	{
+		document.getElementById("gameOver").style.visibility = "hidden";
 		app.best = Math.max(app.best, app.current);
 		app.current = 0;
 		for (var j=0; j<app.vals.length; j++) {app.vals[j] = 0;}
@@ -173,17 +169,22 @@ window.onload = function() {
 			var idx = Math.floor(Math.random() * 16);
 			Vue.set(app.vals, idx, val);
 		}
+		app.gamesPlayed++;
 
 	}
 
 	function gameOver()
 	{
+	    var over = false;
 		if (!(app.possible.left || app.possible.right || app.possible.up || app.possible.down ))
 		{
 			app.best = Math.max(app.best, app.current);
 			console.log(app.possible.up + " " + app.possible.down + " " + app.possible.left + " " + app.possible.right);
+			console.log(app.vals);
     		document.getElementById("gameOver").style.visibility = "visible";
+			over = true;
 		}
+		return over;
 	}
 
 	document.onkeydown = function(event)
@@ -193,33 +194,36 @@ window.onload = function() {
 		var arrow = false;
 		if (kc == 87 || kc == 38)
 		{
-			app.possible.up = moveUp(true);
+			moveUp(true);
 			arrow = true;
 		}
 		else if (kc == 40 || kc == 83)
 		{
-			app.possible.down = moveDown(true);
+			moveDown(true);
 			arrow = true;
 		}
 		else if (kc == 65 || kc == 37)
 		{
-			app.possible.left = moveLeft(true);
+			moveLeft(true);
 			arrow = true;
 		}
 		else if (kc == 68 || kc == 39)
 		{
-			app.possible.right = moveRight(true);
+			moveRight(true);
 			arrow = true;
 		}
 		else	{console.log(event.keyCode + event.key);}
 		if (arrow)
 		{
+    		app.dirty = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
+		    //app.possible
+		    //console.log(app.possible.up + " " + app.possible.down + " " + app.possible.left + " " + app.possible.right);
 		    event.preventDefault();
 			app.possible.down = moveDown(false);
 			app.possible.up = moveUp(false);
 			app.possible.right = moveRight(false);
 			app.possible.left = moveLeft(false);
-			gameOver();
+			if (gameOver()){console.log("!!!!!!!!!!");}
 		}
 	}
 }
