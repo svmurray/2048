@@ -188,48 +188,51 @@ window.onload = function() {
 			console.log(app.possible.up + " " + app.possible.down + " " + app.possible.left + " " + app.possible.right);
 			console.log(app.vals);
     		document.getElementById("gameOver").requestFullscreen();//style.visibility = "visible";
-			over = true;
+			app.gameOver = true;
 		}
-		return over;
+		return app.gameOver;
 	}
 
 	document.onkeydown = function(event)
 	{
-		app.dirty = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
-		var kc = event.keyCode;
-		var arrow = false;
-		if (kc == 87 || kc == 38)
-		{
-			moveUp(true);
-			arrow = true;
-		}
-		else if (kc == 40 || kc == 83)
-		{
-			moveDown(true);
-			arrow = true;
-		}
-		else if (kc == 65 || kc == 37)
-		{
-			moveLeft(true);
-			arrow = true;
-		}
-		else if (kc == 68 || kc == 39)
-		{
-			moveRight(true);
-			arrow = true;
-		}
-		else	{console.log(event.keyCode + event.key);}
-		if (arrow)
-		{
-    		app.dirty = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
-		    //app.possible
-		    //console.log(app.possible.up + " " + app.possible.down + " " + app.possible.left + " " + app.possible.right);
-		    event.preventDefault();
-			app.possible.down = moveDown(false);
-			app.possible.up = moveUp(false);
-			app.possible.right = moveRight(false);
-			app.possible.left = moveLeft(false);
-			if (gameOver()){console.log("!!!!!!!!!!");}
-		}
+		    app.dirty = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
+		    var kc = event.keyCode;
+		    var arrow = false;
+		    if (kc == 87 || kc == 38)
+		    {
+			    moveUp(true);
+			    arrow = true;
+		    }
+		    else if (kc == 40 || kc == 83)
+		    {
+			    moveDown(true);
+			    arrow = true;
+		    }
+		    else if (kc == 65 || kc == 37)
+		    {
+			    moveLeft(true);
+			    arrow = true;
+		    }
+		    else if (kc == 68 || kc == 39)
+		    {
+			    moveRight(true);
+			    arrow = true;
+		    }
+		    else	{console.log(event.keyCode + event.key);}
+		    if (arrow)
+		    {
+		        event.preventDefault();
+	    if (!app.gameOver)
+	    {
+        		app.dirty = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
+		        //app.possible
+		        //console.log(app.possible.up + " " + app.possible.down + " " + app.possible.left + " " + app.possible.right);
+			    app.possible.down = moveDown(false);
+			    app.possible.up = moveUp(false);
+			    app.possible.right = moveRight(false);
+			    app.possible.left = moveLeft(false);
+			    if (gameOver()){console.log("!!!!!!!!!!");}
+		    }
+	    }
 	}
 }
