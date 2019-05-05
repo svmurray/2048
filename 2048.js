@@ -1,6 +1,5 @@
 "use strict";
 window.onload = function() {
-	console.log("js working");
 	var app = new Vue(
     {
 		el: "#app",
@@ -16,8 +15,20 @@ window.onload = function() {
 	});
 
 	document.getElementById("newGame").onclick = startGame;
+	document.getElementById("loginButton").onclick = login;
+	document.getElementById("register").onclick = register;
+	
     startGame();
-    console.log(app.vals);
+    
+    function login()
+    {
+        var empty = document.getElementById("pw").value.length>0 && document.getElementById("un").value.length>0;
+    }
+    
+    function register()
+    {
+        console.log("Register");
+    }
 
 	function addVal()
 	{
@@ -29,9 +40,8 @@ window.onload = function() {
 			if(!oneEmpty) {oneEmpty = oneEmpty || app.vals[i] == 0;}
 			idx = Math.floor(Math.random() * 16);
 			i++;
-			if (i>16){console.log("weird case");}
 		}
-		var val = Math.ceil(Math.random() * 2);
+		var val = 1 + (Math.random() > .9);
 		Vue.set(app.vals, idx, val);
 	}
 
@@ -59,8 +69,11 @@ window.onload = function() {
 							app.highest = Math.max(app.highest, app.vals[(idx1+4*(j-k))-4]);
 						}
 					}
+            		Vue.set(app.vals, 0, app.vals[0]);
 				}
+        		Vue.set(app.vals, 0, app.vals[0]);
 			}
+	    	Vue.set(app.vals, 0, app.vals[0]);
 		}
 		if(moved && update){addVal();}
 		Vue.set(app.vals, 0, app.vals[0]);
@@ -165,14 +178,19 @@ window.onload = function() {
 
 	function startGame()
 	{
-		//document.getElementById("gameOver").style.visibility = "hidden";
+		document.getElementById("gameOver").style.visibility = "hidden";
+        document.getElementById("newGame").style.visibility = "visible";
+		document.getElementById("cont").style.zIndex = -2;
 		app.best = Math.max(app.best, app.current);
+		app.gameOver = false;
 		app.current = 0;
 		for (var j=0; j<app.vals.length; j++) {app.vals[j] = 0;}
-		for(var i = 0; i<2; i++)
+		var i = 0;
+		while(i<2)
 		{
 			var val = Math.ceil(Math.random() * 2);
 			var idx = Math.floor(Math.random() * 16);
+			if(app.vals[idx] == 0) {i++;}
 			Vue.set(app.vals, idx, val);
 		}
 		app.gamesPlayed++;
@@ -181,57 +199,58 @@ window.onload = function() {
 
 	function gameOver()
 	{
-	    var over = false;
 		if (!(app.possible.left || app.possible.right || app.possible.up || app.possible.down ))
 		{
 			app.best = Math.max(app.best, app.current);
-			console.log(app.possible.up + " " + app.possible.down + " " + app.possible.left + " " + app.possible.right);
-			console.log(app.vals);
-    		document.getElementById("gameOver").requestFullscreen();//style.visibility = "visible";
+    		document.getElementById("gameOver").style.visibility = "visible";
+			document.getElementById("newGame2").onclick = startGame;
+			document.getElementById("cont").style.zIndex = 2;
 			app.gameOver = true;
+            document.getElementById("newGame").style.visibility = "hidden";
 		}
 		return app.gameOver;
 	}
 
 	document.onkeydown = function(event)
 	{
-		    app.dirty = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
-		    var kc = event.keyCode;
-		    var arrow = false;
-		    if (kc == 87 || kc == 38)
-		    {
-			    moveUp(true);
-			    arrow = true;
-		    }
-		    else if (kc == 40 || kc == 83)
-		    {
-			    moveDown(true);
-			    arrow = true;
-		    }
-		    else if (kc == 65 || kc == 37)
-		    {
-			    moveLeft(true);
-			    arrow = true;
-		    }
-		    else if (kc == 68 || kc == 39)
-		    {
-			    moveRight(true);
-			    arrow = true;
-		    }
-		    else	{console.log(event.keyCode + event.key);}
-		    if (arrow)
-		    {
-		        event.preventDefault();
-	    if (!app.gameOver)
+	    app.dirty = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
+	    var kc = event.keyCode;
+	    var arrow = false;
+	    if (kc == 38)//87
 	    {
+		    moveUp(true);
+		    arrow = true;
+	    }
+	    else if (kc == 40)//83 || kc == 40)
+	    {
+		    moveDown(true);
+		    arrow = true;
+	    }
+	    else if (kc == 37)//65 || kc == 37)
+	    {
+		    moveLeft(true);
+		    arrow = true;
+	    }
+	    else if (kc == 39)//68 || kc == 39)
+	    {
+		    moveRight(true);
+		    arrow = true;
+	    }
+	    else if (kc == 13)
+	    {
+	        login();
+	    }
+	    if (arrow)
+	    {
+	        event.preventDefault();
+	        if (!app.gameOver)
+	        {
         		app.dirty = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
-		        //app.possible
-		        //console.log(app.possible.up + " " + app.possible.down + " " + app.possible.left + " " + app.possible.right);
 			    app.possible.down = moveDown(false);
 			    app.possible.up = moveUp(false);
 			    app.possible.right = moveRight(false);
 			    app.possible.left = moveLeft(false);
-			    if (gameOver()){console.log("!!!!!!!!!!");}
+			    if (gameOver()){console.log("It's Over");}
 		    }
 	    }
 	}
