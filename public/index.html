@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+        <title>Movie Search</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script type="application/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script type="application/javascript" src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <script type="application/javascript" src="scripts/moviesearch.js"></script>
+    </head>
+    <body onload="Init();">
+        <div id="app" class="container bg-secondary" style="padding: 10px;">
+            <div class="container bg-secondary text-white">
+                <div class="form-group row">
+                    <label for="search" class="col-sm-2 col-form-label">Enter Search:</label>
+                    <div class="col-sm-10">
+                        <input id="search" class="form-control" type="text" v-model="movie_search" :placeholder="input_placeholder"></input>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="type" class="col-sm-2 col-form-label">Search Type:</label>
+                    <div class="col-sm-6">
+                        <select id="type" class="form=control" v-model="movie_type">
+                            <option v-for="option in movie_type_options" :value="option.value">{{ option.text }}</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4 text-right">
+                        <button type="button" class="btn btn-light" @click="MovieSearch">Search</button>
+                    </div>
+                </div>
+            </div>
+            <div class="container bg-light">
+                <ol v-if="movie_type==='/Titles'">
+                    <li v-for="item in search_results"><span class="text-primary" :onclick="'GetTitle(\'/titles/' + item.tconst + '\');'">{{ item.primary_title }}</span> ({{ item.start_year }}) - {{ item.genres }}</li>
+                </ol>
+		<ol v-else>
+		    <li v-for="item in search_results"><span class="text-primary" :onclick="'GetName(\'/names/' + item.nconst + '\');'">{{ item.primary_name }}</span> ({{ item.birth_year }} - {{ item.death_year}}) - {{item.primary_profession }}</li>
+		</ol>
+            </div>
+        </div>
+    </body>
+</html>
