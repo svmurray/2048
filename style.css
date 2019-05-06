@@ -60,6 +60,9 @@ p
 {
     width: 22em;
     margin: auto;
+	display: block;
+	height: 3em;
+	padding-left: 2%;
 }
 
 #login
@@ -71,10 +74,8 @@ p
 button
 {
 	margin: auto;
-	display: flex;
-	margin-bottom: 1rem;
+	margin: .5rem;
     float:left;
-    margin-left: 1em;
 }
 #gameOver
 {

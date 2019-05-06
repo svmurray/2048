@@ -33,12 +33,14 @@
                     <th id="best" class="score">Best Score:</th> 
                     <th id="gp" class="score"> Games Played:</th>
                     <th id="highest" class="score">Highest Tile Achieved:</th>
+			<th id="won" class="score">Games Won</th>
                 </tr> 
                 <tr>
                     <td class="score">{{ current }}</td> 
                     <td class="score">{{ Math.max( current, best) }}</td> 
                     <td class="score">{{ gamesPlayed }}</td>
                     <td class="score">{{ Math.pow(2, highest) }}</td>
+			<td class = "score"> {{ wonNum }} </td>
                 </tr>
             </table> 
             <table id="board">

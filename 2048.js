@@ -10,7 +10,10 @@ window.onload = function() {
 			current: 0,
 			possible: {left: true, right: true, up: true, down: true},
 			gamesPlayed: 0,
-			highest: 0
+			highest: 0,
+			won: false,
+			gameOver: false,
+			wonNum: 0
 		}
 	});
 
@@ -66,14 +69,14 @@ window.onload = function() {
 							app.current += Math.pow(2, app.vals[(idx1+4*(j-k))-4]);
 							app.vals[(idx1+4*(j-k))] = 0;
 							app.dirty[(idx1+4*(j-k))-4] = true;
+							var old = app.highest;
 							app.highest = Math.max(app.highest, app.vals[(idx1+4*(j-k))-4]);
+							if (old !=app.highest && app.highest == 11) {app.wonNum++;}
 						}
 					}
-            		Vue.set(app.vals, 0, app.vals[0]);
+		            		Vue.set(app.vals, 0, app.vals[0]);
 				}
-        		Vue.set(app.vals, 0, app.vals[0]);
 			}
-	    	Vue.set(app.vals, 0, app.vals[0]);
 		}
 		if(moved && update){addVal();}
 		Vue.set(app.vals, 0, app.vals[0]);
@@ -101,9 +104,12 @@ window.onload = function() {
 							app.current += Math.pow(2, app.vals[(idx1-4*(j-k))+4]);
 							app.vals[(idx1-4*(j-k))] = 0;
 							app.dirty[(idx1-4*(j-k))+4] = true;
+							var old = app.highest;
 							app.highest = Math.max(app.highest, app.vals[(idx1-4*(j-k))+4]);
+							if (old !=app.highest && app.highest == 11) {app.wonNum++;}
 						}
 					}
+		            		Vue.set(app.vals, 0, app.vals[0]);
 				}
 			}
 		}
@@ -133,9 +139,12 @@ window.onload = function() {
 							app.current += Math.pow(2, app.vals[(idx1-(j-k))+1]);
 							app.vals[(idx1-(j-k))] = 0;
 							app.dirty[(idx1-(j-k))+1] = true;
+							var old = app.highest;
 							app.highest = Math.max(app.highest, app.vals[(idx1-(j-k))+1]);
+							if (old !=app.highest && app.highest == 11) {app.wonNum++;}
 						}
 					}
+		            		Vue.set(app.vals, 0, app.vals[0]);
 				}
 			}
 		}
@@ -165,9 +174,12 @@ window.onload = function() {
 							app.current += Math.pow(2, app.vals[(idx1+(j-k))-1]);
 							app.vals[(idx1+(j-k))] = 0;
 							app.dirty[(idx1+(j-k))-1] = true;
+							var old = app.highest;
 							app.highest = Math.max(app.highest, app.vals[(idx1+(j-k))-1]);
+							if (old !=app.highest && app.highest == 11) {app.wonNum++;}
 						}
 					}
+		            		Vue.set(app.vals, 0, app.vals[0]);
 				}
 			}
 		}
@@ -179,7 +191,7 @@ window.onload = function() {
 	function startGame()
 	{
 		document.getElementById("gameOver").style.visibility = "hidden";
-        document.getElementById("newGame").style.visibility = "visible";
+	        document.getElementById("newGame").style.visibility = "visible";
 		document.getElementById("cont").style.zIndex = -2;
 		app.best = Math.max(app.best, app.current);
 		app.gameOver = false;
