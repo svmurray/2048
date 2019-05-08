@@ -5,6 +5,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <title>2048</title>
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script type="application/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="2048.js"></script>
         <link href="style.css" rel="stylesheet" type="text/css">    
     </head>
@@ -12,16 +13,33 @@
         <h2>js2048</h2>
         <h4>Join the numbers and get to the 2048 tile!</h4>
         <div id="app">
-            <table id="login">
+	    <div id="registerDiv">
+		<table class="log">
+		    <tr>
+			<td>Username</td>
+			<td><input type="text" id="regUn"></input></td>
+		    </tr>
+		    <tr>
+			<td>Password</td>
+			<td><input type="password" id="regPw"></input></td>
+		    </tr>
+		    <tr>
+			<td>Re-Type Password</td>
+			<td><input type="password" id="regPw2"></input></td>
+		    </tr>
+		</table>
+	    </div>
+            <table class="log" id="login">
                 <tr>
-                    <th>Username</td> 
-                    <th><input type="text" id="un"></input></td>
+                    <td>Username</td> 
+                    <td><input type="text" id="un"></input></td>
                 </tr>
                 <tr>
-                    <th>Password</td> 
-                    <th><input type="password" id="pw"></input></td>
+                    <td>Password</td> 
+                    <td><input type="password" id="pw"></input></td>
                 </tr>
             </table>
+	    <h4>You must login to play<h4>
             <div id="buttonContainer">
                 <button id="newGame" >New Game</button> 
                 <button id="loginButton" >Login</button> 

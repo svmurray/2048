@@ -2,6 +2,7 @@ var path = require("path");
 var url = require("url");
 var express = require("express");
 var sqlite3 = require("sqlite3");
+var md5 = require("md5");
 
 var app = express();
 var port = 8008;
@@ -10,7 +11,13 @@ var dbFilename = path.join(__dirname, "db", "imdb.sqlite3");
 var pubDir = path.join(__dirname, "public");
 
 
+app.use(express.static(pubDir));
 
+console.log(md5("test"));
+
+app.get("/", (req, res) => {
+	console.log(req.url);
+});
 
 /*var db = new sqlite3.Database(dbFilename, sqlite3.OPEN_READONLY, (err) => {
 	if (err)
@@ -23,12 +30,11 @@ var pubDir = path.join(__dirname, "public");
 	}
 });
 */
-app.use(express.static(pubDir));
 
-app.get("/Titles", (req, res) => {
+/*app.get("/Titles", (req, res) => {
 	var req_url = url.parse(req.url);
-	var query = decodeURI(req_url.query).replace(/\*/g, "%");
-	db.all("SELECT * FROM Titles WHERE primary_title LIKE ?", [query], (err, rows) => {
+//	var query = decodeURI(req_url.query).replace(/\*///g, "%");
+/*	db.all("SELECT * FROM Titles WHERE primary_title LIKE ?", [query], (err, rows) => {
 		if (err)
 		{
 			console.log(err);
@@ -44,8 +50,8 @@ app.get("/Titles", (req, res) => {
 
 app.get("/Names", (req, res) => {
 	var req_url = url.parse(req.url);
-	var query = decodeURI(req_url.query).replace(/\*/g, "%");
-	db.all("SELECT * FROM Names WHERE primary_name LIKE ?", [query], (err, rows) => {
+//	var query = decodeURI(req_url.query).replace(/\*///g, "%");
+/*	db.all("SELECT * FROM Names WHERE primary_name LIKE ?", [query], (err, rows) => {
 		if (err)
 		{
 			console.log(err);
@@ -83,6 +89,6 @@ app.get('/names/:nconst', (req, res) => {
 			res.end();
 		}
 	});
-});
+});*/
 
 var server = app.listen(port);

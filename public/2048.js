@@ -1,5 +1,6 @@
 "use strict";
 window.onload = function() {
+
 	var app = new Vue(
     {
 		el: "#app",
@@ -13,7 +14,8 @@ window.onload = function() {
 			highest: 0,
 			won: false,
 			gameOver: false,
-			wonNum: 0
+			wonNum: 0,
+			login: false
 		}
 	});
 
@@ -25,13 +27,24 @@ window.onload = function() {
     
     function login()
     {
-        var empty = document.getElementById("pw").value.length>0 && document.getElementById("un").value.length>0;
+        var empty = !( document.getElementById("pw").value.length>0 && document.getElementById("un").value.length>0);
 	console.log(empty + "login");
+	if (!empty)
+	{
+		console.log(document.getElementById("pw").value + " " + document.getElementById("un").value);
+	}
+/*	$.get("/", (data) => {
+		console.log(data);
+	});*/
+	app.login = true;
     }
     
     function register()
     {
         console.log("Register");
+	var el = document.getElementById("registerDiv");
+	el.style.zIndex = 2;
+	el.style.visibility = "visible";
     }
 
 	function addVal()
@@ -229,22 +242,22 @@ window.onload = function() {
 	    app.dirty = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
 	    var kc = event.keyCode;
 	    var arrow = false;
-	    if (kc == 38)//87
+	    if (kc == 38 && app.login)//87
 	    {
 		    moveUp(true);
 		    arrow = true;
 	    }
-	    else if (kc == 40)//83 || kc == 40)
+	    else if (kc == 40 && app.login)//83 || kc == 40)
 	    {
 		    moveDown(true);
 		    arrow = true;
 	    }
-	    else if (kc == 37)//65 || kc == 37)
+	    else if (kc == 37 && app.login)//65 || kc == 37)
 	    {
 		    moveLeft(true);
 		    arrow = true;
 	    }
-	    else if (kc == 39)//68 || kc == 39)
+	    else if (kc == 39 && app.login)//68 || kc == 39)
 	    {
 		    moveRight(true);
 		    arrow = true;

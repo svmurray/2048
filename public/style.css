@@ -87,10 +87,33 @@ button
 	height: 28rem;
 	visibility: hidden;
 }
+#registerDiv
+{
+	text-align: center;
+	background-color: rgba(1, 14, 35, .5);
+	z-index: -1;
+	position: fixed;
+	top: 30vh;
+	left: 34vw;
+	visibility: hidden;
+}
 #cont
 {
     position: fixed;
     top: 0;
     left: 0;
     z-index: 0;
+}
+
+.log td
+{
+	background-color: black;
+	color: white;
+	height: 2em;
+}
+
+.log
+{
+	width: 25vw;
+	font-size: 75%
 }
