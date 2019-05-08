@@ -7,8 +7,8 @@ var app = express();
 var port = 8008;
 
 var dbFilename = path.join(__dirname, "db", "imdb.sqlite3");
-//var pubDir = path.join(__dirname, "public");
-var pubDir = __dirname;
+var pubDir = path.join(__dirname, "public");
+
 
 
 
