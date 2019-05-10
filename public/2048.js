@@ -20,23 +20,37 @@ window.onload = function() {
 		}
 	});
 
-	document.getElementById("newGame").onclick = startGame;
+	document.getElementById("newGame").onclick = () => {startGame(false);}
 	document.getElementById("loginButton").onclick = login;
 	document.getElementById("register").onclick = register;	
 	document.getElementById("mirror").onclick = mirrorMode;
 	document.getElementById("regSub").onclick = createAccount;
+	document.getElementById("logout").onclick = logout;
 	
-    startGame();
+    startGame(true);
+
+function logout()
+{
+	if(app.login)
+	{
+		app.login = false;
+		document.getElementById("pers").innerHTML = "You must log in to play.";
+	}
+}
     
     function login()
     {
-        var empty = !( document.getElementById("pw").value.length>0 && document.getElementById("un").value.length>0);
+	var pwEl = document.getElementById("pw");
+	var unEl = document.getElementById("un");
+        var empty = !( pwEl.value.length>0 && unEl.value.length>0);
 	console.log(empty + "login");
 	if (!empty) {
-		$.get("/login?" + document.getElementById("pw").value + "&" + document.getElementById("un").value, (data) => {
+		$.get("/login?" + pwEl.value + "&" + unEl.value, (data) => {
 			var str = data.split(" ");
 			app.login = str[0];
 			document.getElementById("pers").innerHTML = "Welcome " + str[1] + "! Please begin.";
+			pwEl.value = "";
+			unEl.value = "";
 		});
 	}
 	else {window.alert("Please enter a username and password");}
@@ -44,17 +58,37 @@ window.onload = function() {
 
 function mirrorMode()
 {
-	startGame();
+	startGame(false);
 	app.mirror = !app.mirror;
 }
 
 function createAccount()
 {
-        var empty = !( document.getElementById("regPw2").value.length>0 && document.getElementById("regPw").value.length>0 && document.getElementById("regUn").value.length>0);
+	var pw2 = document.getElementById("regPw2");
+	var pw = document.getElementById("regPw");
+	var un = document.getElementById("regUn");
+        var empty = !( pw2.value.length>0 && pw.value.length>0 && un.value.length>0);
 	if (!empty) {
-		if (document.getElementById("regPw2").value.trim() == document.getElementById("regPw").value.trim()) 
+		if (pw2.value.trim() == pw.value.trim()) 
 		{
-			$.get("/register?" + document.getElementById("regPw").value + "&" + document.getElementById("regUn").value, (data) => {console.log(data);});
+			$.get("/register?" + pw.value + "&" + un.value, (data) => {
+				console.log(data);
+				if (data.indexOf("cess") >=0)
+				{
+					app.login = true;
+					var el = document.getElementById("registerDiv");
+					el.style.zIndex = -2;
+					el.style.visibility = "hidden";
+					document.getElementById("pers").innerHTML = "Welcome " + un.value + "! Please begin.";
+				}
+				else
+				{
+					window.alert("That username has already been taken. Please select another.");
+				}
+				pw2.value = "";
+				pw.value = "";
+				un.value = "";
+			});
 		}
 		else{window.alert("Passwords must match");}
 	}
@@ -225,25 +259,27 @@ function createAccount()
 		return moved;
 	}
 
-	function startGame()
+	function startGame(force)
 	{
-		document.getElementById("gameOver").style.visibility = "hidden";
-	        document.getElementById("newGame").style.visibility = "visible";
-		document.getElementById("cont").style.zIndex = -2;
-		app.best = Math.max(app.best, app.current);
-		app.gameOver = false;
-		app.current = 0;
-		for (var j=0; j<app.vals.length; j++) {app.vals[j] = 0;}
-		var i = 0;
-		while(i<2)
+		if (force || app.login)
 		{
-			var val = Math.ceil(Math.random() * 2);
-			var idx = Math.floor(Math.random() * 16);
-			if(app.vals[idx] == 0) {i++;}
-			Vue.set(app.vals, idx, val);
+			document.getElementById("gameOver").style.visibility = "hidden";
+		        document.getElementById("newGame").style.visibility = "visible";
+			document.getElementById("cont").style.zIndex = -2;
+			app.best = Math.max(app.best, app.current);
+			app.gameOver = false;
+			app.current = 0;
+			for (var j=0; j<app.vals.length; j++) {app.vals[j] = 0;}
+			var i = 0;
+			while(i<2)
+			{
+				var val = Math.ceil(Math.random() * 2);
+				var idx = Math.floor(Math.random() * 16);
+				if(app.vals[idx] == 0) {i++;}
+				Vue.set(app.vals, idx, val);
+			}
+			app.gamesPlayed++;
 		}
-		app.gamesPlayed++;
-
 	}
 
 	function gameOver()
@@ -252,7 +288,7 @@ function createAccount()
 		{
 			app.best = Math.max(app.best, app.current);
     		document.getElementById("gameOver").style.visibility = "visible";
-			document.getElementById("newGame2").onclick = startGame;
+			document.getElementById("newGame2").onclick = () => {startGame(false);}
 			document.getElementById("cont").style.zIndex = 2;
 			app.gameOver = true;
             document.getElementById("newGame").style.visibility = "hidden";
