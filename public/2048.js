@@ -28,6 +28,13 @@ window.onload = function() {
 	document.getElementById("logout").onclick = logout;
 	
     startGame(true);
+updateStats();
+function updateStats()
+{
+	$.post("/update?" + app.best+ "&" + app.gamesPlayed + "&" + app.highest + "&" + app.wonNum,"", (data, status) => {
+		console.log(data,status);
+	});
+}
 
 function logout()
 {

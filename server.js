@@ -13,6 +13,12 @@ var accounts = [];
 
 app.use(express.static(pubDir));
 
+app.post("/update", (req, res) => {
+	var reqUrl = url.parse(req.url);
+	console.log(reqUrl);
+//	console.log(req);
+});
+
 app.get("/login", (req, res) => {
 	var reqUrl = url.parse(req.url);
 	console.log("in /");
