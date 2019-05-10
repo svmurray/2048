@@ -9,25 +9,39 @@ var port = 8008;
 
 var dbFilename = path.join(__dirname, "db", "imdb.sqlite3");
 var pubDir = path.join(__dirname, "public");
-
+var accounts = [];
 
 app.use(express.static(pubDir));
 
-console.log(md5("test"));
+app.get("/login", (req, res) => {
+	var reqUrl = url.parse(req.url);
+	console.log("in /");
+	var str = reqUrl.query.split("&");
+	str[0] = md5(str[0]);
+	accounts.push(str);
+	console.log(accounts);
 
-app.get("/", (req, res) => {
-	console.log(req.url);
+	res.writeHead(200, {"Content-Type": "text/plain"});
+	res.write('true ' + str[1]);
+	res.end();
 });
 
+app.get("/register", (req, res) => {
+	var reqUrl = url.parse(req.url);
+	var str = reqUrl.query.split("&");
+	str[0] = md5(str[0]);
+	accounts.push(str);
+	console.log(accounts);
+	res.writeHead(200, {"Content-Type": "text/plain"});
+	res.write('successfully registered');
+	res.end();
+});
+var server = app.listen(port);
+
+
 /*var db = new sqlite3.Database(dbFilename, sqlite3.OPEN_READONLY, (err) => {
-	if (err)
-	{
-		console.log("Error opening " + dbFilename);
-	}
-	else
-	{
-		console.log("Now connected to " + dbFilename);
-	}
+	if (err) {console.log("Error opening " + dbFilename);}
+	else{console.log("Now connected to " + dbFilename);}
 });
 */
 
@@ -91,4 +105,3 @@ app.get('/names/:nconst', (req, res) => {
 	});
 });*/
 
-var server = app.listen(port);

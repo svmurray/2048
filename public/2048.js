@@ -15,13 +15,16 @@ window.onload = function() {
 			won: false,
 			gameOver: false,
 			wonNum: 0,
-			login: false
+			login: false,
+			mirror: false
 		}
 	});
 
 	document.getElementById("newGame").onclick = startGame;
 	document.getElementById("loginButton").onclick = login;
-	document.getElementById("register").onclick = register;
+	document.getElementById("register").onclick = register;	
+	document.getElementById("mirror").onclick = mirrorMode;
+	document.getElementById("regSub").onclick = createAccount;
 	
     startGame();
     
@@ -29,15 +32,35 @@ window.onload = function() {
     {
         var empty = !( document.getElementById("pw").value.length>0 && document.getElementById("un").value.length>0);
 	console.log(empty + "login");
-	if (!empty)
-	{
-		console.log(document.getElementById("pw").value + " " + document.getElementById("un").value);
+	if (!empty) {
+		$.get("/login?" + document.getElementById("pw").value + "&" + document.getElementById("un").value, (data) => {
+			var str = data.split(" ");
+			app.login = str[0];
+			document.getElementById("pers").innerHTML = "Welcome " + str[1] + "! Please begin.";
+		});
 	}
-/*	$.get("/", (data) => {
-		console.log(data);
-	});*/
-	app.login = true;
+	else {window.alert("Please enter a username and password");}
     }
+
+function mirrorMode()
+{
+	startGame();
+	app.mirror = !app.mirror;
+}
+
+function createAccount()
+{
+        var empty = !( document.getElementById("regPw2").value.length>0 && document.getElementById("regPw").value.length>0 && document.getElementById("regUn").value.length>0);
+	if (!empty) {
+		if (document.getElementById("regPw2").value.trim() == document.getElementById("regPw").value.trim()) 
+		{
+			$.get("/register?" + document.getElementById("regPw").value + "&" + document.getElementById("regUn").value, (data) => {console.log(data);});
+		}
+		else{window.alert("Passwords must match");}
+	}
+	else {window.alert("Please enter a username and password");}
+
+}
     
     function register()
     {
@@ -242,22 +265,22 @@ window.onload = function() {
 	    app.dirty = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
 	    var kc = event.keyCode;
 	    var arrow = false;
-	    if (kc == 38 && app.login)//87
+	    if (((kc == 38 && !app.mirror) || ( kc == 40 && app.mirror)) && app.login)//87
 	    {
 		    moveUp(true);
 		    arrow = true;
 	    }
-	    else if (kc == 40 && app.login)//83 || kc == 40)
+	    else if (((kc == 40 && !app.mirror) || (kc == 38 && app.mirror)) && app.login)//83 || kc == 40)
 	    {
 		    moveDown(true);
 		    arrow = true;
 	    }
-	    else if (kc == 37 && app.login)//65 || kc == 37)
+	    else if (((kc == 37 && !app.mirror) || (kc == 39 && app.mirror)) && app.login)//65 || kc == 37)
 	    {
 		    moveLeft(true);
 		    arrow = true;
 	    }
-	    else if (kc == 39 && app.login)//68 || kc == 39)
+	    else if (((kc == 39 && !app.mirror) || (kc == 37 && app.mirror)) && app.login)//68 || kc == 39)
 	    {
 		    moveRight(true);
 		    arrow = true;

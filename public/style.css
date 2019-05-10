@@ -58,11 +58,10 @@ p
 }
 #buttonContainer
 {
-    width: 22em;
+    width: 26em;
     margin: auto;
 	display: block;
 	height: 3em;
-	padding-left: 2%;
 }
 
 #login
