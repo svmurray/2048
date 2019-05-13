@@ -40,14 +40,18 @@
                     <td><input type="password" id="pw"></input></td>
                 </tr>
             </table>
-	    <h4 id="pers">You must login to play</h4>
-            <div id="buttonContainer">
-                <button id="newGame" >New Game</button> 
-                <button id="loginButton" >Login</button> 
+            <div class="bc" id="buttonContainer">
                 <button id="register" >Register</button> 
-		<button id="mirror">Mirror Mode</button>
+                <button id="loginButton" >Login</button> 
 		<button id="logout">Logout</button>
+		<button id="av">Select Avatar</button>
             </div>
+	    <h4 id="pers">You must login to play</h4>
+	<div class = "bc">
+		<button id="mirror">Mirror Mode</button>
+                <button id="newGame" >New Game</button> 
+
+	</div>
             <table id="SB">
                 <tr>
                     <th id="current" class="score">Current Score:</th> 
@@ -64,6 +68,17 @@
 			<td class = "score"> {{ wonNum }} </td>
                 </tr>
             </table> 
+<div id="bucket">
+	<table class="stats">
+		<tr>
+			<th> User </td>
+			<th> Score </td>
+		</tr>
+		<tr v-for="stat in stats">
+			<td class="link" v-on:click="showUser(stat.un)"> {{stat.un}} </td>
+			<td> {{stat.score}} </td>
+		</tr>
+	</table>
             <table id="board">
                 <tr>
                     <td v-bind:class="{ empty: vals[0] == 0, notEmpty: vals[0] > 0, sPlus: vals[0] >= 5}">{{ Math.pow(2, vals[0]) }}</td> 
@@ -90,13 +105,36 @@
                     <td v-bind:class="{ empty: vals[15] == 0, notEmpty: vals[15] > 0, sPlus: vals[15] >= 5}">{{ Math.pow(2, vals[15]) }}</td>
                 </tr>
             </table> 
+	<table class="stats" v-if="stats.length>=1">
+		<tr>
+			<th> User </td>
+			<td> {{stats[activeIdx].un}} </td>
+		</tr>
+		<tr>
+			<th> Score </td>
+			<td> {{stats[activeIdx].score}} </td>
+		</tr>
+		<tr>
+			<th> Games Played </td>
+			<td> {{stats[activeIdx].gamesPlayed}} </td>
+		</tr>
+		<tr>
+			<th> Games Won </td>
+			<td> {{stats[activeIdx].wins}} </td>
+		<tr>
+		</tr>
+			<th> Highest Tile </td>
+			<td> {{stats[activeIdx].highTile}} </td>
+		</tr>
+	</table>
+</div>
             <div id="cont">
                 <div id="gameOver" >
                     <p>Good Game! Your score was {{current}}</p>
                     <button id="newGame2" >New Game</button> 
                 </div>
             </div>
-            <h3>Created by Sam Murray </h3> 
+            <h3 id="final">Created by Sam Murray </h3> 
             <h4><a href="about.html"> About the Creators</a></h4>
         </div>
     </body>

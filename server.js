@@ -13,29 +13,70 @@ var accounts = [];
 
 app.use(express.static(pubDir));
 
+app.get("/user/:un", (req, res) => {
+	
+	if (err) {console.log(err);}
+	else
+	{
+
+	}
+});
+
 app.post("/update", (req, res) => {
 	var reqUrl = url.parse(req.url);
-	console.log(reqUrl);
-//	console.log(req);
+	var str = reqUrl.query.split("&");
+	console.log(str);
+
+	db.run("UPDATE data SET gamesPlayed = ?, score = ?, highTile = ?, wins = ? WHERE un = ?", str[2], str[1], str[3], str[4], str[0], (err, row) =>
+	{
+		if (err) {console.log(err);}
+		else {console.log(row);}
+	});
+
+	db.all("SELECT un, gamesPlayed, score, highTile, wins FROM data", (err, rows) => {
+		if (err) {console.log(err);}
+		else
+		{
+			console.log(rows);
+			res.writeHead(200, {"Content-Type": "application/json"});
+			res.write(JSON.stringify(rows));
+			res.end();
+		}
+	});
+
+
 });
 
 app.get("/login", (req, res) => {
 	var reqUrl = url.parse(req.url);
-	console.log("in /");
+	console.log("in /login");
 	var str = reqUrl.query.split("&");
 	str[0] = md5(str[0]);
-//	accounts.push(str);
-//	console.log(accounts);
+
+	var resultStr = 'true';
+
 
 	db.get("SELECT * FROM data WHERE un = ?", [str[1]], (err, row) => {
-		if (err){console.log(err);}
-		else{console.log(row);}
+		if (err) {console.log(err);}
+		else if (row == undefined)
+		{
+			console.log("undefined un");
+			resultStr = 'false';
+		}
+		else
+		{
+			console.log(row);
+			console.log(row.pw);
+			console.log(str[0]);
+			if (row.pw != str[0])
+			{
+				resultStr = "false";
+			}
+		}
+		res.writeHead(200, {"Content-Type": "text/plain"});
+		res.write(resultStr + ' ' + str[1]);
+		res.end();
 	});
-
-
-	res.writeHead(200, {"Content-Type": "text/plain"});
-	res.write('true ' + str[1]);
-	res.end();
 });
 
 app.get("/register", (req, res) => {

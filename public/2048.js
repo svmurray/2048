@@ -16,7 +16,24 @@ window.onload = function() {
 			gameOver: false,
 			wonNum: 0,
 			login: false,
-			mirror: false
+			mirror: false,
+			stats: [],
+			un: '',
+			activeIdx: 0
+		},
+		methods: {
+			showUser: function (un)
+			{
+				console.log(un);
+				for (var i = 0; i< app.stats.length; i++)
+				{
+					if (un == app.stats[i].un)
+					{
+						console.log(app.stats[i]);
+						app.activeIdx = i;
+					}
+				}
+			}
 		}
 	});
 
@@ -26,27 +43,55 @@ window.onload = function() {
 	document.getElementById("mirror").onclick = mirrorMode;
 	document.getElementById("regSub").onclick = createAccount;
 	document.getElementById("logout").onclick = logout;
-	
-    startGame(true);
-updateStats();
-function updateStats()
+	document.getElementById("av").onlick = selectAvatar;
+
+	document.getElementById('av').style.visibility = "hidden";
+
+        startGame(true);
+
+
+function selectAvatar(){
+	console.log("Selecting Avatar...");
+}
+
+function sortData()
 {
-	$.post("/update?" + app.best+ "&" + app.gamesPlayed + "&" + app.highest + "&" + app.wonNum,"", (data, status) => {
-		console.log(data,status);
+	var results = [app.stats[0]];
+	var idx, curr, j;
+	for (var i=1; i<app.stats.length; i++)
+	{
+		curr = app.stats[i];
+		for (j=0; j<results.length; j++)
+		{
+			idx = j;
+			if (curr.score > results[j].score)
+			{
+				j = results.length+1;
+			}
+		}
+		if(j==results.length) {idx++;}
+		results.splice(idx,0,curr);
+	}
+	app.stats = results.slice(0,10);
+	console.log(app.stats);
+}
+
+function updateStats() {
+	$.post("/update?" + app.un + "&" + Math.max(app.best, app.current) + "&" + app.gamesPlayed + "&" + app.highest + "&" + app.wonNum,"", (data, status) => {
+		app.stats = data;
+		sortData();
 	});
 }
 
-function logout()
-{
-	if(app.login)
-	{
+function logout(){
+	if(app.login){
 		app.login = false;
 		document.getElementById("pers").innerHTML = "You must log in to play.";
+		document.getElementById('av').style.visibility = "hidden";
 	}
 }
-    
-    function login()
-    {
+
+    function login(){
 	var pwEl = document.getElementById("pw");
 	var unEl = document.getElementById("un");
         var empty = !( pwEl.value.length>0 && unEl.value.length>0);
@@ -54,10 +99,28 @@ function logout()
 	if (!empty) {
 		$.get("/login?" + pwEl.value + "&" + unEl.value, (data) => {
 			var str = data.split(" ");
-			app.login = str[0];
-			document.getElementById("pers").innerHTML = "Welcome " + str[1] + "! Please begin.";
+			app.login = (str[0] == "true");
+			if (!app.login) {window.alert("Invalid Username or Password");}
+			else
+			{
+				for (var i=0; i<app.stats.length; i++)
+				{
+					if (app.stats[i].un == str[1])
+					{
+						app.best = app.stats[i].score;
+						app.gamesPlayed = app.stats[i].gamesPlayed;
+						app.highest = app.stats[i].highTile;
+						app.wonNum = app.stats[i].wins
+					}
+				}
+				app.un = str[1];
+				document.getElementById("pers").innerHTML = "Welcome " + str[1] + "! Please begin.";
+				document.getElementById('av').style.visibility = "visible";
+			}
 			pwEl.value = "";
 			unEl.value = "";
+			console.log(app.login + ": login");
+			
 		});
 	}
 	else {window.alert("Please enter a username and password");}
@@ -149,7 +212,7 @@ function createAccount()
 							app.dirty[(idx1+4*(j-k))-4] = true;
 							var old = app.highest;
 							app.highest = Math.max(app.highest, app.vals[(idx1+4*(j-k))-4]);
-							if (old !=app.highest && app.highest == 11) {app.wonNum++;}
+							if (old !=app.highest){if (app.highest == 11){app.wonNum++;} updateStats();}
 						}
 					}
 		            		Vue.set(app.vals, 0, app.vals[0]);
@@ -184,7 +247,7 @@ function createAccount()
 							app.dirty[(idx1-4*(j-k))+4] = true;
 							var old = app.highest;
 							app.highest = Math.max(app.highest, app.vals[(idx1-4*(j-k))+4]);
-							if (old !=app.highest && app.highest == 11) {app.wonNum++;}
+							if (old !=app.highest){if (app.highest == 11){app.wonNum++;} updateStats();}
 						}
 					}
 		            		Vue.set(app.vals, 0, app.vals[0]);
@@ -219,7 +282,7 @@ function createAccount()
 							app.dirty[(idx1-(j-k))+1] = true;
 							var old = app.highest;
 							app.highest = Math.max(app.highest, app.vals[(idx1-(j-k))+1]);
-							if (old !=app.highest && app.highest == 11) {app.wonNum++;}
+							if (old !=app.highest){if (app.highest == 11){app.wonNum++;} updateStats();}
 						}
 					}
 		            		Vue.set(app.vals, 0, app.vals[0]);
@@ -254,7 +317,7 @@ function createAccount()
 							app.dirty[(idx1+(j-k))-1] = true;
 							var old = app.highest;
 							app.highest = Math.max(app.highest, app.vals[(idx1+(j-k))-1]);
-							if (old !=app.highest && app.highest == 11) {app.wonNum++;}
+							if (old !=app.highest){if (app.highest == 11){app.wonNum++;} updateStats();}
 						}
 					}
 		            		Vue.set(app.vals, 0, app.vals[0]);
@@ -286,6 +349,7 @@ function createAccount()
 				Vue.set(app.vals, idx, val);
 			}
 			app.gamesPlayed++;
+			updateStats();
 		}
 	}
 
@@ -294,12 +358,14 @@ function createAccount()
 		if (!(app.possible.left || app.possible.right || app.possible.up || app.possible.down ))
 		{
 			app.best = Math.max(app.best, app.current);
-    		document.getElementById("gameOver").style.visibility = "visible";
+    			document.getElementById("gameOver").style.visibility = "visible";
 			document.getElementById("newGame2").onclick = () => {startGame(false);}
 			document.getElementById("cont").style.zIndex = 2;
 			app.gameOver = true;
-            document.getElementById("newGame").style.visibility = "hidden";
+		        document.getElementById("newGame").style.visibility = "hidden";
+			updateStats();
 		}
+
 		return app.gameOver;
 	}
 

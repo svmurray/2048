@@ -9,7 +9,40 @@ h2
 #board
 {
     margin-bottom: 3rem;
+float: left;
 }
+
+#final
+{
+	clear: both;
+}
+#bucket
+{
+	margin-left: 20vw;
+}
+.stats
+{
+	float:left;
+	margin: 0 4vw;
+	font-size: 70%;
+}
+.stats th
+{
+	font-weight: bold;
+	color: blue;
+	text-align: center;
+	font-size: 350%;
+}
+
+.stats td
+{
+	width: auto;
+	height: 3rem;
+	background-color: 3b3b3b;
+	color: green;
+	border-radius: 0;
+}
+
 td
 {
 	text-align: center;
@@ -56,12 +89,26 @@ p
 {
     color: white;
 }
-#buttonContainer
+.bc
 {
-    width: 32em;
+	width: 15em;
     margin: auto;
 	display: block;
 	height: 3em;
+}
+#buttonContainer
+{
+    width: 24em;
+}
+
+.link
+{
+	text-decoration: underline;
+}
+
+.link:hover
+{
+	cursor:grab;
 }
 
 #login
@@ -69,6 +116,7 @@ p
     color: white;
     margin-bottom: 1vw;
     clear: left;
+font-size: 60%;
 }
 button
 {
@@ -113,6 +161,5 @@ button
 
 .log
 {
-	width: 25vw;
-	font-size: 75%
+
 }
