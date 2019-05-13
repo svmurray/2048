@@ -18,7 +18,7 @@ float: left;
 }
 #bucket
 {
-	margin-left: 20vw;
+	margin-left: 15vw;
 }
 .stats
 {
@@ -31,16 +31,17 @@ float: left;
 	font-weight: bold;
 	color: blue;
 	text-align: center;
-	font-size: 350%;
+	font-size: 250%;
 }
 
 .stats td
 {
 	width: auto;
-	height: 3rem;
+	height: auto;
 	background-color: 3b3b3b;
 	color: green;
 	border-radius: 0;
+	font-size: 190%;
 }
 
 td

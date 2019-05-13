@@ -1,4 +1,6 @@
 "use strict";
+var ws;
+
 window.onload = function() {
 
 	var app = new Vue(
@@ -19,17 +21,21 @@ window.onload = function() {
 			mirror: false,
 			stats: [],
 			un: '',
-			activeIdx: 0
+			activeIdx: 0,
+            client_count: 0,
+            new_message: "",
+            chat_messages: []
+
 		},
 		methods: {
 			showUser: function (un)
 			{
-				console.log(un);
+//				console.log(un);
 				for (var i = 0; i< app.stats.length; i++)
 				{
 					if (un == app.stats[i].un)
 					{
-						console.log(app.stats[i]);
+//						console.log(app.stats[i]);
 						app.activeIdx = i;
 					}
 				}
@@ -44,10 +50,34 @@ window.onload = function() {
 	document.getElementById("regSub").onclick = createAccount;
 	document.getElementById("logout").onclick = logout;
 	document.getElementById("av").onlick = selectAvatar;
+	document.getElementById("cancel").onclick = cancelReg;
 
 	document.getElementById('av').style.visibility = "hidden";
 
         startGame(true);
+setInterval(updateStats,10000);
+
+    var port = window.location.port || "80";
+    ws = new WebSocket("ws://" + window.location.hostname + ":" + port);
+    ws.onopen = (event) => {
+        console.log("Connection successful!");
+    };
+    ws.onmessage = (event) => {
+	var dat = JSON.parse(event.data);
+        console.log(event.data);
+        app.client_count = dat.cSize;
+	if (dat.message != "")
+	{
+		console.log(dat.message);
+		app.chat_messages.push(dat.message);
+		console.log(app.chat_messages);
+	}
+    };
+function SendMessage() {
+    ws.send(app.new_message);
+	app.new_message = "";
+}
+
 
 
 function selectAvatar(){
@@ -73,10 +103,11 @@ function sortData()
 		results.splice(idx,0,curr);
 	}
 	app.stats = results.slice(0,10);
-	console.log(app.stats);
+//	console.log(app.stats);
 }
 
 function updateStats() {
+	console.log("/update?" + app.un + "&" + Math.max(app.best, app.current) + "&" + app.gamesPlayed + "&" + app.highest + "&" + app.wonNum);
 	$.post("/update?" + app.un + "&" + Math.max(app.best, app.current) + "&" + app.gamesPlayed + "&" + app.highest + "&" + app.wonNum,"", (data, status) => {
 		app.stats = data;
 		sortData();
@@ -95,7 +126,6 @@ function logout(){
 	var pwEl = document.getElementById("pw");
 	var unEl = document.getElementById("un");
         var empty = !( pwEl.value.length>0 && unEl.value.length>0);
-	console.log(empty + "login");
 	if (!empty) {
 		$.get("/login?" + pwEl.value + "&" + unEl.value, (data) => {
 			var str = data.split(" ");
@@ -119,8 +149,6 @@ function logout(){
 			}
 			pwEl.value = "";
 			unEl.value = "";
-			console.log(app.login + ": login");
-			
 		});
 	}
 	else {window.alert("Please enter a username and password");}
@@ -142,7 +170,7 @@ function createAccount()
 		if (pw2.value.trim() == pw.value.trim()) 
 		{
 			$.get("/register?" + pw.value + "&" + un.value, (data) => {
-				console.log(data);
+//				console.log(data);
 				if (data.indexOf("cess") >=0)
 				{
 					app.login = true;
@@ -150,6 +178,12 @@ function createAccount()
 					el.style.zIndex = -2;
 					el.style.visibility = "hidden";
 					document.getElementById("pers").innerHTML = "Welcome " + un.value + "! Please begin.";
+					document.getElementById('av').style.visibility = "visible";
+					app.best = 0;
+					app.gamesPlayed = 1;
+					app.highest = 1;
+					app.wonNum = 0;
+					app.un = un.value;
 				}
 				else
 				{
@@ -168,11 +202,17 @@ function createAccount()
     
     function register()
     {
-        console.log("Register");
+//        console.log("Register");
 	var el = document.getElementById("registerDiv");
 	el.style.zIndex = 2;
 	el.style.visibility = "visible";
     }
+function cancelReg()
+{
+	var el = document.getElementById("registerDiv");
+	el.style.zIndex = -2;
+	el.style.visibility = 'hidden';
+}
 
 	function addVal()
 	{

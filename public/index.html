@@ -29,6 +29,7 @@
 		    </tr>
 		</table>
 		<button id="regSub">Submit</button>
+		<button id="cancel">Cancel</button>
 	    </div>
             <table class="log" id="login">
                 <tr>
@@ -124,7 +125,7 @@
 		<tr>
 		</tr>
 			<th> Highest Tile </td>
-			<td> {{stats[activeIdx].highTile}} </td>
+			<td> {{Math.pow(2, stats[activeIdx].highTile)}} </td>
 		</tr>
 	</table>
 </div>
