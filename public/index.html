@@ -10,9 +10,24 @@
         <link href="style.css" rel="stylesheet" type="text/css">    
     </head>
     <body>
+        <div id="app">
+	<div id="chat">
+		<h4>Join a chat room to talk with other users!</h4>
+		<select id="room">
+			<option value="1">Room 1</option>
+			<option value="2">Room 2</option>
+			<option value="3">Room 3</option>
+			<option value="4">Room 4</option>
+		<select>
+		<input id="messageIn" type="text"></input>
+		<div id="messageDiv">
+			<p v-for="chat_message in chat_messages">{{ chat_message }} </p>
+		</div>
+	</div>
+
+
         <h2>js2048</h2>
         <h4>Join the numbers and get to the 2048 tile!</h4>
-        <div id="app">
 	    <div id="registerDiv">
 		<table class="log">
 		    <tr>
@@ -28,7 +43,7 @@
 			<td><input type="password" id="regPw2"></input></td>
 		    </tr>
 		</table>
-		<button id="regSub">Submit</button>
+		<button style="margin-left: 40%" id="regSub">Submit</button>
 		<button id="cancel">Cancel</button>
 	    </div>
             <table class="log" id="login">
@@ -131,8 +146,10 @@
 </div>
             <div id="cont">
                 <div id="gameOver" >
-                    <p>Good Game! Your score was {{current}}</p>
-                    <button id="newGame2" >New Game</button> 
+		    <div id="goCont">
+                    	<p>Good Game! Your score was {{current}}</p>
+                    	<button id="newGame2" >New Game</button> 
+		    </div>
                 </div>
             </div>
             <h3 id="final">Created by Sam Murray </h3> 

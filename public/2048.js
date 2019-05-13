@@ -24,7 +24,8 @@ window.onload = function() {
 			activeIdx: 0,
             client_count: 0,
             new_message: "",
-            chat_messages: []
+            chat_messages: [],
+			room: 0
 
 		},
 		methods: {
@@ -53,9 +54,9 @@ window.onload = function() {
 	document.getElementById("cancel").onclick = cancelReg;
 
 	document.getElementById('av').style.visibility = "hidden";
-
+	document.getElementById("room").onclick = updateRoom;
         startGame(true);
-setInterval(updateStats,10000);
+	setInterval(updateStats,10000);
 
     var port = window.location.port || "80";
     ws = new WebSocket("ws://" + window.location.hostname + ":" + port);
@@ -73,9 +74,19 @@ setInterval(updateStats,10000);
 		console.log(app.chat_messages);
 	}
     };
+function updateRoom()
+{
+	app.room = document.getElementById('room').value;
+	ws.send(JSON.stringify({'newMess': '', 'room': app.room, 'un': app.un}));
+	app.chat_messages=[];
+}
 function SendMessage() {
-    ws.send(app.new_message);
-	app.new_message = "";
+	var oldRoom = app.room;
+	app.room = document.getElementById("room").value;
+var messObj = JSON.stringify({'newMess': app.new_message, 'room': app.room, 'un': app.un});
+    ws.send(messObj);
+
+	if (oldRoom != app.room) {app.new_message = "";}
 }
 
 
@@ -434,9 +445,14 @@ function cancelReg()
 		    moveRight(true);
 		    arrow = true;
 	    }
-	    else if (kc == 13)
+	    else if (kc == 13 && !app.login) {login();}
+	    else if (kc == 13 && app.login)
 	    {
-	        login();
+		console.log(app.login);
+		app.new_message = document.getElementById("messageIn").value;
+		console.log("chat" + app.new_message );
+		SendMessage();
+		document.getElementById("messageIn").value = "";
 	    }
 	    if (arrow)
 	    {

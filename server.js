@@ -15,24 +15,15 @@ var accounts = [];
 
 app.use(express.static(pubDir));
 
-app.get("/user/:un", (req, res) => {
-	
-	if (err) {console.log(err);}
-	else
-	{
-
-	}
-});
-
 app.post("/update", (req, res) => {
 	var reqUrl = url.parse(req.url);
 	var str = reqUrl.query.split("&");
-	console.log(str);
+//	console.log(str);
 
 	db.run("UPDATE data SET gamesPlayed = ?, score = ?, highTile = ?, wins = ? WHERE un = ?", str[2], str[1], str[3], str[4], str[0], (err, row) =>
 	{
 		if (err) {console.log(err);}
-		else {console.log(row);}
+//		else {console.log(row);}
 	});
 
 	db.all("SELECT un, gamesPlayed, score, highTile, wins FROM data", (err, rows) => {
@@ -136,10 +127,15 @@ wss.on('connection', (ws) => {
     for (var j = 0; j<messArr.length; j++) {ws.send(messArr[j]);}
 
     ws.on('message', (message) => {
-        console.log('Message from ' + client_id + ': ' + message);
-	var mess = JSON.stringify({'message': "Message from " + client_id + ": " + message, 'cSize': len});
-	Broadcast(mess)
-//	messArr.push(mess);
+	var myMess = JSON.parse(message);
+	clients[client_id].room = myMess.room;
+	if (!(myMess.newMess == ''))
+	{
+	        console.log('Message from ' + client_id + ': ' + myMess.newMess + myMess.un + myMess.room);
+		var mess = JSON.stringify({'message': myMess.un + ": " + myMess.newMess,  'cSize': len});
+		Broadcast(mess, myMess.room)
+//		messArr.push(mess);
+	}
     });
     ws.on('close', () => {
         console.log('Client disconnected: ' + client_id);
@@ -150,8 +146,8 @@ wss.on('connection', (ws) => {
     Broadcast(JSON.stringify({"message": "", 'cSize': len}));
 });
 
-function Broadcast(message)
+function Broadcast(message, room)
 {
 	var id;
-	for (id in clients) {if (clients.hasOwnProperty(id)) {clients[id].send(message);}}
+	for (id in clients) {if (clients.hasOwnProperty(id)) {if(clients[id].room == room){clients[id].send(message);}}}
 }

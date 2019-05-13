@@ -1,29 +1,49 @@
-body {background-color: #e6e6e6;}
-.notEmpty {color: black;}
-h2, h3, h4 {text-align: center;}
-.sPlus {background-color: red;}
-h2
+body 		{background-color: #e6e6e6;}
+#bucket 	{margin-left: 15%;}
+#buttonContainer{width: 24em;}
+#final  	{clear: both;}
+h2 		{font-size: 450%;}
+h2, h3, h4 	{text-align: center;}
+.link 		{text-decoration: underline;}
+#newGame2	{margin-left: 38%;}
+.notEmpty 	{color: black;}
+.sPlus 		{background-color: red;}
+p 		
 {
-    font-size: 450%;
-}
-#board
-{
-    margin-bottom: 3rem;
-float: left;
+	color: white;
+	padding-top: 13rem;
 }
 
-#final
+#chat input
 {
-	clear: both;
+	width: 100%;
 }
-#bucket
+
+#chat
 {
-	margin-left: 15vw;
+	position: fixed;
+	top: 1vh;
+	left: 1vw;
+	width: 28vw;
 }
+
+#board
+{
+	margin-bottom: 3rem;
+	float: left;
+}
+
+#messageDiv p
+{
+	color: black;
+	margin: 0;
+	padding: 0;
+}
+
 .stats
 {
 	float:left;
-	margin: 0 4vw;
+	margin: 0 5%;
 	font-size: 70%;
 }
 .stats th
@@ -55,6 +75,7 @@ td
 	font-size: 300%;
 	font-family: times new roman;
 }
+
 table
 {
 	margin: auto;
@@ -62,11 +83,13 @@ table
 	border-collapse: separate;
 	background-color: #000000;
 }
+
 .empty
 {
 	background-color: white;
 	color: white;
 }
+
 .score
 {
 	background-color: #333333;
@@ -78,6 +101,7 @@ table
 	border-radius: 0px;
 	padding: 0;
 }
+
 #SB
 {
 	width: 25%;
@@ -86,65 +110,66 @@ table
 	text-align: center;
 	clear: left;
 }
-p
-{
-    color: white;
-}
+
 .bc
 {
 	width: 15em;
-    margin: auto;
+   	margin: auto;
 	display: block;
 	height: 3em;
-}
-#buttonContainer
-{
-    width: 24em;
-}
-
-.link
-{
-	text-decoration: underline;
 }
 
 .link:hover
 {
 	cursor:grab;
+	color: rgb(104, 198, 226);
 }
 
 #login
 {
-    color: white;
-    margin-bottom: 1vw;
-    clear: left;
-font-size: 60%;
+    	color: white;
+    	margin-bottom: 1vw;
+    	clear: left;
+	font-size: 60%;
 }
 button
 {
 	margin: auto;
 	margin: .5rem;
-    float:left;
+    	float: left;
 }
+
 #gameOver
 {
 	text-align: center;
 	background-color: rgba(1, 14, 35, .5);
-	width: 28rem;
-	margin-left: 38vw;
-	margin-top: 30vh;
-	height: 28rem;
-	visibility: hidden;
+	width: 100vw;
+	height: 100vh;
+	position: fixed;
+	top: 0;
+	left: 0;
 }
+
+#goCont
+{
+	background-color: black;
+	height: 35rem;
+	width: 30vw;
+	margin: auto;
+	margin-top: 20rem;
+}
+
 #registerDiv
 {
 	text-align: center;
-	background-color: rgba(1, 14, 35, .5);
+	background-color: black;
 	z-index: -1;
 	position: fixed;
 	top: 30vh;
 	left: 34vw;
 	visibility: hidden;
 }
+
 #cont
 {
     position: fixed;
@@ -158,9 +183,4 @@ button
 	background-color: black;
 	color: white;
 	height: 2em;
-}
-
-.log
-{
-
 }
