@@ -128,20 +128,21 @@ wss.on('connection', (ws) => {
 
     ws.on('message', (message) => {
 	var myMess = JSON.parse(message);
-	clients[client_id].room = myMess.room;
-	if (!(myMess.newMess == ''))
-	{
-	        console.log('Message from ' + client_id + ': ' + myMess.newMess + myMess.un + myMess.room);
-		var mess = JSON.stringify({'message': myMess.un + ": " + myMess.newMess,  'cSize': len});
-		Broadcast(mess, myMess.room)
-//		messArr.push(mess);
-	}
+        clients[client_id].room = myMess.room;
+        if (!(myMess.newMess == ''))
+        {
+            console.log('Message from ' + client_id + ': ' + myMess.newMess + myMess.un + myMess.room);
+            var mess = JSON.stringify({'message': myMess.un + ": " + myMess.newMess,  'cSize': len});
+            Broadcast(mess, myMess.room)
+            //messArr.push(mess);
+        }
     });
+    
     ws.on('close', () => {
         console.log('Client disconnected: ' + client_id);
         delete clients[client_id];
-	len--;
-	Broadcast(JSON.stringify({"message": "", 'cSize': len}));
+        len--;
+        Broadcast(JSON.stringify({"message": "", 'cSize': len}));
     });
     Broadcast(JSON.stringify({"message": "", 'cSize': len}));
 });
