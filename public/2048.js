@@ -64,15 +64,15 @@ window.onload = function() {
         console.log("Connection successful!");
     };
     ws.onmessage = (event) => {
-	var dat = JSON.parse(event.data);
-        console.log(event.data);
-        app.client_count = dat.cSize;
-	if (dat.message != "")
-	{
-		console.log(dat.message);
-		app.chat_messages.push(dat.message);
-		console.log(app.chat_messages);
-	}
+        var dat = JSON.parse(event.data);
+            console.log(event.data);
+            app.client_count = dat.cSize;
+        if (dat.message != "")
+        {
+            console.log(dat.message);
+            app.chat_messages.push(dat.message);
+            console.log(app.chat_messages);
+        }
     };
 function updateRoom()
 {
@@ -83,7 +83,7 @@ function updateRoom()
 function SendMessage() {
 	var oldRoom = app.room;
 	app.room = document.getElementById("room").value;
-var messObj = JSON.stringify({'newMess': app.new_message, 'room': app.room, 'un': app.un});
+    var messObj = JSON.stringify({'newMess': app.new_message, 'room': app.room, 'un': app.un});
     ws.send(messObj);
 
 	if (oldRoom != app.room) {app.new_message = "";}
