@@ -74,6 +74,25 @@ window.onload = function() {
             console.log(app.chat_messages);
         }
     };
+
+function createRoom(val)
+{
+	var exists = false;
+	for (var i = 0; i<app.rooms.length; i++)
+	{
+		if (app.rooms[i].name == val)
+		{
+			exists = true;
+		}
+	}
+	if (!exists)
+	{
+		app.rooms.push({'idx': app.rooms.length, 'name': val});
+	}
+
+	console.log(val + exists);
+}
+
 function updateRoom()
 {
 	app.room = document.getElementById('room').value;
@@ -450,11 +469,25 @@ function cancelReg()
 	    else if (kc == 13 && !app.login) {login();}
 	    else if (kc == 13 && app.login)
 	    {
-		console.log(app.login);
-		app.new_message = document.getElementById("messageIn").value;
-		console.log("chat" + app.new_message );
-		SendMessage();
-		document.getElementById("messageIn").value = "";
+		if (app.room == 0)
+		{
+			var val = document.getElementById("newRoom").value;
+			if ( val == "")
+			{
+				window.alert("You must create or join a room");
+			}
+			else
+			{
+				createRoom(val);
+			}
+			document.getElementById("newRoom").value = "";
+		}
+		else
+		{
+			app.new_message = document.getElementById("messageIn").value;
+			SendMessage();
+			document.getElementById("messageIn").value = "";
+		}
 	    }
 	    if (arrow)
 	    {

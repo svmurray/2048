@@ -14,25 +14,31 @@ p
 	padding-top: 13rem;
 }
 
-select
-{
-	
-}
-
 #avDiv
 {
 	position: fixed;
 	top: 1vh;
 	right: 1vw;
 }
+
 img
 {
 	width: 4rem;
 }
 
+#chat div
+{
+	float: left;
+}
+
 #chat input
 {
-	width: 100%;
+	width: 70%;
+}
+
+select
+{
+	clear: both;
 }
 
 #chat

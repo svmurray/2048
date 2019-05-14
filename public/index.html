@@ -15,10 +15,11 @@
 		<h4>Join a chat room to talk with other users!</h4>
 		<select id="room">
 			<option v-for="room in rooms" :value="room.idx">{{room.name}}</option>
-		<select>
-		<span> Create Room: <span>
+		<select><br/>
+		<div> Create Room: </div>
 		<input type="text" id="newRoom"></input>
 		<input id="messageIn" type="text"></input>
+		<div>Send Message:</div>
 		<div id="messageDiv">
 			<p v-for="chat_message in chat_messages">{{ chat_message }} </p>
 		</div>
