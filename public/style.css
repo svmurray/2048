@@ -14,6 +14,22 @@ p
 	padding-top: 13rem;
 }
 
+select
+{
+	
+}
+
+#avDiv
+{
+	position: fixed;
+	top: 1vh;
+	right: 1vw;
+}
+img
+{
+	width: 4rem;
+}
+
 #chat input
 {
 	width: 100%;

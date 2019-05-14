@@ -18,15 +18,15 @@ app.use(express.static(pubDir));
 app.post("/update", (req, res) => {
 	var reqUrl = url.parse(req.url);
 	var str = reqUrl.query.split("&");
-//	console.log(str);
+	console.log(str);
 
-	db.run("UPDATE data SET gamesPlayed = ?, score = ?, highTile = ?, wins = ? WHERE un = ?", str[2], str[1], str[3], str[4], str[0], (err, row) =>
+	db.run("UPDATE data SET gamesPlayed = ?, score = ?, highTile = ?, wins = ?, av = ? WHERE un = ?", str[2], str[1], str[3], str[4], str[5], str[0], (err, row) =>
 	{
 		if (err) {console.log(err);}
 //		else {console.log(row);}
 	});
 
-	db.all("SELECT un, gamesPlayed, score, highTile, wins FROM data", (err, rows) => {
+	db.all("SELECT un, gamesPlayed, score, highTile, wins, av FROM data", (err, rows) => {
 		if (err) {console.log(err);}
 		else
 		{

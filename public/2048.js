@@ -22,24 +22,21 @@ window.onload = function() {
 			stats: [],
 			un: '',
 			activeIdx: 0,
-            client_count: 0,
-            new_message: "",
-            chat_messages: [],
-			room: 0
-
+	                client_count: 0,
+            		new_message: "",
+            		chat_messages: [],
+			room: 0,
+			avIdx: 0,
+			imgArr: ['images/0.jpg', 'images/1.png', 'images/2.jpg', 'images/3.jpg', 'images/4.jpg', 'images/5.jpg', 'images/6.jpg', 'images/7.jpg', 'images/8.png', 'images/9.jpg', 'images/10.jpg', 'images/11.jpg', 'images/12.jpg', 'images/13.jpg', 'images/14.jpg', 'images/15.jpg'],
+			rooms: [{'idx': 0, 'name': 'no rooms created yet'}]
 		},
 		methods: {
-			showUser: function (un)
+			showUser: function (un) {for (var i = 0; i< app.stats.length; i++){if (un == app.stats[i].un){app.activeIdx = i;}}},
+			setAv: function (id)
 			{
-//				console.log(un);
-				for (var i = 0; i< app.stats.length; i++)
-				{
-					if (un == app.stats[i].un)
-					{
-//						console.log(app.stats[i]);
-						app.activeIdx = i;
-					}
-				}
+				document.getElementById("avDiv").style.visibility = 'hidden';
+				app.avIdx = id;
+				updateStats();
 			}
 		}
 	});
@@ -50,9 +47,12 @@ window.onload = function() {
 	document.getElementById("mirror").onclick = mirrorMode;
 	document.getElementById("regSub").onclick = createAccount;
 	document.getElementById("logout").onclick = logout;
-	document.getElementById("av").onlick = selectAvatar;
+	document.getElementById("av").onclick = selectAvatar;
+
+
 	document.getElementById("cancel").onclick = cancelReg;
 
+	document.getElementById("avDiv").style.visibility = 'hidden';
 	document.getElementById('av').style.visibility = "hidden";
 	document.getElementById("room").onclick = updateRoom;
         startGame(true);
@@ -93,6 +93,7 @@ var messObj = JSON.stringify({'newMess': app.new_message, 'room': app.room, 'un'
 
 function selectAvatar(){
 	console.log("Selecting Avatar...");
+	document.getElementById("avDiv").style.visibility = 'visible';
 }
 
 function sortData()
@@ -119,7 +120,7 @@ function sortData()
 
 function updateStats() {
 	console.log("/update?" + app.un + "&" + Math.max(app.best, app.current) + "&" + app.gamesPlayed + "&" + app.highest + "&" + app.wonNum);
-	$.post("/update?" + app.un + "&" + Math.max(app.best, app.current) + "&" + app.gamesPlayed + "&" + app.highest + "&" + app.wonNum,"", (data, status) => {
+	$.post("/update?" + app.un + "&" + Math.max(app.best, app.current) + "&" + app.gamesPlayed + "&" + app.highest + "&" + app.wonNum + "&" + app.avIdx,"", (data, status) => {
 		app.stats = data;
 		sortData();
 	});
@@ -151,7 +152,8 @@ function logout(){
 						app.best = app.stats[i].score;
 						app.gamesPlayed = app.stats[i].gamesPlayed;
 						app.highest = app.stats[i].highTile;
-						app.wonNum = app.stats[i].wins
+						app.wonNum = app.stats[i].wins;
+						app.avIdx = app.stats[i].av;
 					}
 				}
 				app.un = str[1];

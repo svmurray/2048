@@ -14,14 +14,39 @@
 	<div id="chat">
 		<h4>Join a chat room to talk with other users!</h4>
 		<select id="room">
-			<option value="1">Room 1</option>
-			<option value="2">Room 2</option>
-			<option value="3">Room 3</option>
-			<option value="4">Room 4</option>
+			<option v-for="room in rooms" :value="room.idx">{{room.name}}</option>
 		<select>
+		<span> Create Room: <span>
+		<input type="text" id="newRoom"></input>
 		<input id="messageIn" type="text"></input>
 		<div id="messageDiv">
 			<p v-for="chat_message in chat_messages">{{ chat_message }} </p>
+		</div>
+	</div>
+	<div id ="avDiv">
+		<div>
+			<img v-on:click="setAv(0)" src="images/0.jpg">
+			<img v-on:click="setAv(1)" src="images/1.png">
+			<img v-on:click="setAv(2)" src="images/2.jpg">
+			<img v-on:click="setAv(3)" src="images/3.jpg">
+		</div>
+		<div>
+			<img v-on:click="setAv(4)" src="images/4.jpg">
+			<img v-on:click="setAv(5)" src="images/5.jpg">
+			<img v-on:click="setAv(6)" src="images/6.jpg">
+			<img v-on:click="setAv(7)" src="images/7.jpg">
+		<div>
+		</div>
+			<img v-on:click="setAv(8)" src="images/8.png">
+			<img v-on:click="setAv(9)" src="images/9.jpg">
+			<img v-on:click="setAv(10)" src="images/10.jpg">
+			<img v-on:click="setAv(11)" src="images/11.jpg">
+		<div>
+		</div>
+			<img v-on:click="setAv(12)" src="images/12.jpg">
+			<img v-on:click="setAv(13)" src="images/13.jpg">
+			<img v-on:click="setAv(14)" src="images/14.jpg">
+			<img v-on:click="setAv(15)" src="images/15.jpg">
 		</div>
 	</div>
 
@@ -70,6 +95,7 @@
 	</div>
             <table id="SB">
                 <tr>
+		    <th id="avatarCurr" class="score">Avatar:</th>
                     <th id="current" class="score">Current Score:</th> 
                     <th id="best" class="score">Best Score:</th> 
                     <th id="gp" class="score"> Games Played:</th>
@@ -77,6 +103,7 @@
 			<th id="won" class="score">Games Won</th>
                 </tr> 
                 <tr>
+		    <td class="score"><img :src="imgArr[avIdx]"></td>
                     <td class="score">{{ current }}</td> 
                     <td class="score">{{ Math.max( current, best) }}</td> 
                     <td class="score">{{ gamesPlayed }}</td>
@@ -125,6 +152,10 @@
 		<tr>
 			<th> User </td>
 			<td> {{stats[activeIdx].un}} </td>
+		</tr>
+		<tr>
+			<th> Avatar </td>
+			<td> <img :src="imgArr[stats[activeIdx].av]"> </td>
 		</tr>
 		<tr>
 			<th> Score </td>
