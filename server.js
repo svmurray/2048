@@ -12,25 +12,41 @@ var port = 8008;
 var dbFilename = path.join(__dirname, "data.sqlite3");
 var pubDir = path.join(__dirname, "public");
 var accounts = [];
+var rooms = [];
 
 app.use(express.static(pubDir));
+
+app.post("/room", (req, res) => {
+	var reqUrl = url.parse(req.url);
+	var str = decodeURI(reqUrl.query);
+	var taken = false;
+
+	for (var i=0; i<rooms.length; i++)
+	{
+		if (rooms[i] == str)
+		{
+			taken = true;
+		}
+	}
+	if (!taken)
+	{
+		rooms.push(str);
+	}
+	console.log(rooms)
+	res.writeHead(200, {"Content-Type": "application/json"});
+	res.write(JSON.stringify({'rooms': rooms}));
+	res.end();
+});
 
 app.post("/update", (req, res) => {
 	var reqUrl = url.parse(req.url);
 	var str = reqUrl.query.split("&");
-	console.log(str);
 
-	db.run("UPDATE data SET gamesPlayed = ?, score = ?, highTile = ?, wins = ?, av = ? WHERE un = ?", str[2], str[1], str[3], str[4], str[5], str[0], (err, row) =>
-	{
-		if (err) {console.log(err);}
-//		else {console.log(row);}
-	});
-
+	db.run("UPDATE data SET gamesPlayed = ?, score = ?, highTile = ?, wins = ?, av = ? WHERE un = ?", str[2], str[1], str[3], str[4], str[5], str[0], (err, row) => {if (err) {console.log(err);}});
 	db.all("SELECT un, gamesPlayed, score, highTile, wins, av FROM data", (err, rows) => {
 		if (err) {console.log(err);}
 		else
 		{
-			console.log(rows);
 			res.writeHead(200, {"Content-Type": "application/json"});
 			res.write(JSON.stringify(rows));
 			res.end();
@@ -42,30 +58,14 @@ app.post("/update", (req, res) => {
 
 app.get("/login", (req, res) => {
 	var reqUrl = url.parse(req.url);
-	console.log("in /login");
 	var str = reqUrl.query.split("&");
 	str[0] = md5(str[0]);
-
 	var resultStr = 'true';
-
 
 	db.get("SELECT * FROM data WHERE un = ?", [str[1]], (err, row) => {
 		if (err) {console.log(err);}
-		else if (row == undefined)
-		{
-			console.log("undefined un");
-			resultStr = 'false';
-		}
-		else
-		{
-			console.log(row);
-			console.log(row.pw);
-			console.log(str[0]);
-			if (row.pw != str[0])
-			{
-				resultStr = "false";
-			}
-		}
+		else if (row == undefined){resultStr = 'false';}
+		else{if (row.pw != str[0]){resultStr = "false";}}
 		res.writeHead(200, {"Content-Type": "text/plain"});
 		res.write(resultStr + ' ' + str[1]);
 		res.end();
@@ -81,21 +81,12 @@ app.get("/register", (req, res) => {
 	db.get("SELECT * FROM data WHERE un = ?", [str[1]], (err, row) => {
 		if (err){console.log(err);}
 		else{
-			if (row != undefined)
-			{
-				response = "Username has been taken";
-				console.log("exists")
-			}
+			if (row != undefined){response = "Username has been taken";}
 			else
 			{
 				response = "successfuly registered";
-				console.log("n'existe pas");
-				db.run("INSERT INTO data VALUES(?,?,?,?,?,?)", str[1],'0','0','0','0',str[0], (err) =>
-				{
-					console.log(err);
-				});
+				db.run("INSERT INTO data VALUES(?,?,?,?,?,?)", str[1],'0','0','0','0',str[0], (err) => {console.log(err);});
 			}
-			console.log(response);
 		}
 
 		res.writeHead(200, {"Content-Type": "text/plain"});
@@ -109,15 +100,14 @@ var db = new sqlite3.Database(dbFilename, sqlite3.OPEN_READWRITE, (err) => {
 	else{console.log("Now connected to " + dbFilename);}
 });
 
-//var server = app.listen(port);
 var server = http.createServer(app);
 server.listen(port, '0.0.0.0');
 console.log('Now listening on port ' + port);
 
 var wss = new WebSocket.Server({server: server});
 var clients = {};
-var messArr = [];
 var len = 0;
+var messArr = [];
 
 wss.on('connection', (ws) => {
     var client_id = ws._socket.remoteAddress + ":" + ws._socket.remotePort;
@@ -134,7 +124,6 @@ wss.on('connection', (ws) => {
             console.log('Message from ' + client_id + ': ' + myMess.newMess + myMess.un + myMess.room);
             var mess = JSON.stringify({'message': myMess.un + ": " + myMess.newMess,  'cSize': len});
             Broadcast(mess, myMess.room)
-            //messArr.push(mess);
         }
     });
     

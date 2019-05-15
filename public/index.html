@@ -14,7 +14,7 @@
 	<div id="chat">
 		<h4>Join a chat room to talk with other users!</h4>
 		<select id="room">
-			<option v-for="room in rooms" :value="room.idx">{{room.name}}</option>
+			<option v-for="(name, index) in rooms" :value="index">{{name}}</option>
 		<select><br/>
 		<div> Create Room: </div>
 		<input type="text" id="newRoom"></input>

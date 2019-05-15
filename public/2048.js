@@ -28,7 +28,7 @@ window.onload = function() {
 			room: 0,
 			avIdx: 0,
 			imgArr: ['images/0.jpg', 'images/1.png', 'images/2.jpg', 'images/3.jpg', 'images/4.jpg', 'images/5.jpg', 'images/6.jpg', 'images/7.jpg', 'images/8.png', 'images/9.jpg', 'images/10.jpg', 'images/11.jpg', 'images/12.jpg', 'images/13.jpg', 'images/14.jpg', 'images/15.jpg'],
-			rooms: [{'idx': 0, 'name': 'no rooms created yet'}]
+			rooms: ['no rooms created yet']
 		},
 		methods: {
 			showUser: function (un) {for (var i = 0; i< app.stats.length; i++){if (un == app.stats[i].un){app.activeIdx = i;}}},
@@ -43,7 +43,7 @@ window.onload = function() {
 
 	document.getElementById("newGame").onclick = () => {startGame(false);}
 	document.getElementById("loginButton").onclick = login;
-	document.getElementById("register").onclick = register;	
+	document.getElementById("register").onclick = register;
 	document.getElementById("mirror").onclick = mirrorMode;
 	document.getElementById("regSub").onclick = createAccount;
 	document.getElementById("logout").onclick = logout;
@@ -57,6 +57,8 @@ window.onload = function() {
 	document.getElementById("room").onclick = updateRoom;
         startGame(true);
 	setInterval(updateStats,10000);
+	setInterval(() => {createRoom("public");},10000);
+	createRoom("public");
 
     var port = window.location.port || "80";
     ws = new WebSocket("ws://" + window.location.hostname + ":" + port);
@@ -77,20 +79,10 @@ window.onload = function() {
 
 function createRoom(val)
 {
-	var exists = false;
-	for (var i = 0; i<app.rooms.length; i++)
-	{
-		if (app.rooms[i].name == val)
-		{
-			exists = true;
-		}
-	}
-	if (!exists)
-	{
-		app.rooms.push({'idx': app.rooms.length, 'name': val});
-	}
-
-	console.log(val + exists);
+	$.post("/room?" + val, "", (data, status) => {
+		console.log(data);
+		app.rooms = data.rooms;
+	});
 }
 
 function updateRoom()
@@ -139,6 +131,7 @@ function sortData()
 
 function updateStats() {
 	console.log("/update?" + app.un + "&" + Math.max(app.best, app.current) + "&" + app.gamesPlayed + "&" + app.highest + "&" + app.wonNum);
+
 	$.post("/update?" + app.un + "&" + Math.max(app.best, app.current) + "&" + app.gamesPlayed + "&" + app.highest + "&" + app.wonNum + "&" + app.avIdx,"", (data, status) => {
 		app.stats = data;
 		sortData();
@@ -469,7 +462,7 @@ function cancelReg()
 	    else if (kc == 13 && !app.login) {login();}
 	    else if (kc == 13 && app.login)
 	    {
-		if (app.room == 0)
+		if (document.getElementById("messageIn").value == "")
 		{
 			var val = document.getElementById("newRoom").value;
 			if ( val == "")
