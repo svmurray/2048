@@ -48,7 +48,7 @@ window.onload = function() {
 	document.getElementById("regSub").onclick = createAccount;
 	document.getElementById("logout").onclick = logout;
 	document.getElementById("av").onclick = selectAvatar;
-
+    
 
 	document.getElementById("cancel").onclick = cancelReg;
 

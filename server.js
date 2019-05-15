@@ -7,7 +7,7 @@ var WebSocket = require('ws');
 var http = require('http');
 
 var app = express();
-var port = 8008;
+var port = 8015;
 
 var dbFilename = path.join(__dirname, "data.sqlite3");
 var pubDir = path.join(__dirname, "public");
@@ -73,19 +73,21 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
+    console.log("attempting to register");
 	var reqUrl = url.parse(req.url);
 	var str = reqUrl.query.split("&");
+    console.log(str);
 	var response;
 	str[0] = md5(str[0]);
 
 	db.get("SELECT * FROM data WHERE un = ?", [str[1]], (err, row) => {
-		if (err){console.log(err);}
+		if (err){console.log("here\n"+err);}
 		else{
 			if (row != undefined){response = "Username has been taken";}
 			else
 			{
 				response = "successfuly registered";
-				db.run("INSERT INTO data VALUES(?,?,?,?,?,?)", str[1],'0','0','0','0',str[0], (err) => {console.log(err);});
+				db.run("INSERT INTO data VALUES(?,?,?,?,?,?,?)", str[1],'0','0','0','0',str[0],'0', (err) => {console.log(err);});
 			}
 		}
 
