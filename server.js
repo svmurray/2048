@@ -7,7 +7,7 @@ var WebSocket = require('ws');
 var http = require('http');
 
 var app = express();
-var port = 8015;
+var port = 8008;
 
 var dbFilename = path.join(__dirname, "data.sqlite3");
 var pubDir = path.join(__dirname, "public");
